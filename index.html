@@ -566,7 +566,7 @@
 <header>
   <div class="header-badge">TÜ VKA · Andres Ansper · 2015</div>
   <h1>🌲 Puiduõpetus</h1>
-  <p>Interaktiivne õppimisvahend · Puidu ehitus, tugevus ja materjali klassifikatsioon</p>
+  <p>Interaktiivne õppimisvahend · Puidu ehitus, tugevus, materjali klassifikatsioon ja vastupidavus</p>
 </header>
 
 <nav id="nav">
@@ -574,6 +574,7 @@
   <button onclick="showSection('flashcards', this)"><span class="nav-icon">🃏</span> Flashcard-id</button>
   <button onclick="showSection('viktoriin', this)"><span class="nav-icon">🎯</span> Viktoriin</button>
   <button onclick="showSection('puiduliigid_sec', this)"><span class="nav-icon">🌲</span> Puiduliigid</button>
+  <button onclick="showSection('vastupidavus_sec', this)"><span class="nav-icon">🛡️</span> Vastupidavus</button>
   <button onclick="showSection('meelespea', this)"><span class="nav-icon">📌</span> Meelespea</button>
 </nav>
 
@@ -653,6 +654,20 @@
         <li>Tiheduse järgi: kerge (haab ~490 kg/m³) → raske (tamm ~700 kg/m³) → väga raske (ebenipuu 940–1320 kg/m³)</li>
       </ul>
     </div>
+    <div class="summary-card" style="border-top-color:#8b4513">
+      <div class="summary-card-header">
+        <div class="card-icon">🛡️</div>
+        <h3>VI · Puidu vastupidavus</h3>
+      </div>
+      <ul>
+        <li>Puit põleb – pikaaegsel kuumutamisel võib süttida juba 150°C juures; söekihi kiirus ca 0,6 mm/min</li>
+        <li>UV + hapnik → fotooksüdatsioon lagundab ligniini; kahjustus kuni 3 mm/aastas</li>
+        <li>Seened: hallitusseened, sinetusseened, mädanikseened – viimased lagundavad puitu mehaaniliselt</li>
+        <li>Putukad: mööbli-toonesepp (suurim kahju Eestis), majasikk (Lääne-Eesti); mõlemad eelistavad niisket/seenkahjustusega puitu</li>
+        <li>EVS-EN 350:2016: 5 vastupidavusklassi (1 = &gt;25 a, 5 = 0–5 a); kehtib ainult lülipuidule!</li>
+        <li>Kaitse: õige materjali valik, termoõtlus, atsetüleerimine (Accoya), furfureerimine (Kebony), surveimmutus (Tanalith E)</li>
+      </ul>
+    </div>
   </div>
   <div class="mantra-box">
     <h3>⭐ Mantra – puit kui tarbematerjal on…</h3>
@@ -681,7 +696,7 @@
 <section id="flashcards" class="section">
   <h2 class="section-title"><span class="icon">🃏</span> Flashcard-id</h2>
   <div class="fc-controls">
-    <div class="fc-progress">Kaart <span id="fc-current">1</span> / <span id="fc-total">16</span></div>
+    <div class="fc-progress">Kaart <span id="fc-current">1</span> / <span id="fc-total">36</span></div>
     <div class="fc-btn-group">
       <button class="btn btn-secondary" onclick="shuffleCards()">🔀 Sega</button>
       <button class="btn btn-secondary" onclick="resetCards()">↺ Alusta uuesti</button>
@@ -715,7 +730,7 @@
     <div class="quiz-info">
       <div class="quiz-stat"><span class="num" id="q-score">0</span><span class="lbl">Õige</span></div>
       <div class="quiz-stat"><span class="num" id="q-wrong">0</span><span class="lbl">Vale</span></div>
-      <div class="quiz-stat"><span class="num" id="q-left">52</span><span class="lbl">Järel</span></div>
+      <div class="quiz-stat"><span class="num" id="q-left">71</span><span class="lbl">Järel</span></div>
     </div>
     <div class="progress-bar-wrap">
       <div class="progress-bar-label">Edusamm</div>
@@ -804,6 +819,137 @@
       </table>
     </div>
   </div>
+</section>
+
+<!-- ============================= VASTUPIDAVUS ============================= -->
+<section id="vastupidavus_sec" class="section">
+  <h2 class="section-title"><span class="icon">🛡️</span> Puidu vastupidavus</h2>
+
+  <div class="cheat-section">
+    <div class="cheat-header">
+      <h3>🔥 Tulekindlus</h3>
+      <span class="cheat-tag">Tuli</span>
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-item highlight"><strong>Süttimistemperatuur</strong>Puit põleb. Pikaaegsel kuumutamisel võib süttimistemperatuur olla juba 150°C juures. Suurema tihedusega ja niiskussisaldusega puit süttib aeglasemalt.</div>
+      <div class="cheat-item"><strong>Söekihi tekkimine</strong>Söekihi tekkimise kiirus on ca <strong>0,6 mm/min</strong>. Söekihi soojusjuhtivus on ca 15% puidu soojusjuhtivusest – see aeglustab põlemist ja kaitseb puidu sisekihte kuumuse eest.</div>
+      <div class="cheat-item gold"><strong>Põlemise temperatuuritsoonid</strong>Vähem kui 200°C: terve puit · 200–280°C: lagunemise algus · 280–500°C: söestumise tsoon · 500–1100°C: aktiivse põlemise tsoon</div>
+    </div>
+  </div>
+
+  <div class="cheat-section">
+    <div class="cheat-header">
+      <h3>☀️ UV-kiirgus ja ilmastik</h3>
+      <span class="cheat-tag">UV</span>
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-item highlight"><strong>Fotooksüdatsioon</strong>UV-kiirguse ja hapniku koostoimel tekkiv fotooksüdatsioon kahjustab puitu, lagundades peamiselt <strong>ligniini</strong>. Kahjustunud puit muutub hapraks, poorsus ja veeimamisvõime suurenevad, luues soodsa keskkonna patogeenidele.</div>
+      <div class="cheat-item"><strong>Kahjustuse ulatus</strong>Kahjustuse määr võib olla kuni <strong>3 mm aastas</strong>. Hoonete lõunapoolsetel osadel on kahjustus märgatavalt kiirem ja suurema ulatusega.</div>
+      <div class="cheat-item green"><strong>Keemilised kaitsevahendid</strong>Tavatemperatuuridel on puit hapete suhtes üsna vastupidav. Ammoniaak ja alused vähendavad puidu tugevust oluliselt juba suhteliselt väikeste kontsentratsioonide (5%) juures.</div>
+    </div>
+  </div>
+
+  <div class="cheat-section">
+    <div class="cheat-header">
+      <h3>🍄 Seenkahjustused</h3>
+      <span class="cheat-tag">Seened</span>
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-item highlight"><strong>Seente arenemistingimused</strong>Seened ei kahjusta <strong>kuiva puitu</strong>. Arenemiseks vajavad eosed: toitaineid · hapnikku · soojust · niiskust · pH taset 2–7</div>
+      <div class="cheat-item"><strong>Hallitusseened</strong>Pinnapealsed, rikuvad puidu välimust. Ei vähenda mehhaanilist tugevust, kuid loovad soodsad tingimused mädanikseentele.</div>
+      <div class="cheat-item"><strong>Sinetusseened</strong>Tungivad sügavale puitu (alustades säsikiirtest). Ei vähenda mehhaanilist tugevust, kuid hõlbustavad puidu nakatumist mädanikseentega ning kahjustavad koobaspooride membraane.</div>
+      <div class="cheat-item highlight"><strong>Mädanikseened</strong>Lagundavad puitu. Kolm tüüpi: <strong>pruunmädanik</strong> (kahjustab okaspuid), <strong>valgemädanik</strong> (kahjustab lehtpuid), <strong>pehmemädanik</strong>. Lisaks eristatakse laomädanikku ja metsamädanikku.</div>
+      <div class="cheat-item gold"><strong>Pruunmädanik vs valgemädanik</strong>Pruunmädanikku tekitavad seened kahjustavad enamasti okaspuupuitu, valgemädanikseened lehtpuupuitu. Kuna Eestis kasutatakse ehituses enamasti okaspuupuitu, on põhilised kahjustajad <strong>pruunmädanikseened</strong>.</div>
+    </div>
+    <div class="table-wrap" style="margin-top:1rem">
+      <table>
+        <thead><tr><th>Tegur</th><th>Hallitusseened</th><th>Sinetusseened</th><th>Mädanikseened</th></tr></thead>
+        <tbody>
+          <tr><td>Niiskus (vesi)</td><td>Niiskus 20–150%; vaba vett pole vaja</td><td>Vaba vesi vajalik; niiskus 30–120%</td><td>Vaba vesi vajalik; niiskus 30–120%, opt. 40–80%</td></tr>
+          <tr><td>Temperatuur</td><td>0–55°C</td><td>−3 kuni +50°C; opt. 22–28°C</td><td>0–40°C; opt. 25–32°C</td></tr>
+          <tr><td>pH</td><td>pH 2–10; opt. 5–6</td><td>pH 2–7; opt. ~5,5</td><td>pH 2–7; opt. 5</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="cheat-section">
+    <div class="cheat-header">
+      <h3>🍄 Põhilised mädanikseened ehitistes</h3>
+      <span class="cheat-tag">Seened ehitistes</span>
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-item highlight"><strong>Majavamm (Serpula lacrymans)</strong>Ohtlikem seen ehitistes. Iseloomulik pindmine mütseel: kiuline/vatjas, valge, kollakad-punakaslillakad laigud. Seeneväädid tugevad, hallikad/tumepruunid, kuni 5 mm laiad.</div>
+      <div class="cheat-item"><strong>Majamädik (Coniophora puteana)</strong>Pruunmädanikku tekitav seen ehitistes. Üks levinumaid seenkahjustajaid.</div>
+      <div class="cheat-item"><strong>Majanääts (Antrodia sinuosa)</strong>Pruunmädanikku tekitav seen ehitistes.</div>
+      <div class="cheat-item"><strong>Männi-mädiknahkis (Leucogyrophana pinastri)</strong>Pruunmädanikku tekitav seen ehitistes.</div>
+      <div class="cheat-item gold"><strong>Metsamädanikseened (ohtlikkuse järjekorras)</strong>1. Kuuse-juurepess (Heterobasidion parviporum) · 2. Haavataelik (Phellinus tremulae) · 3. Männi-juurepess (Heterobasidion annosum)</div>
+      <div class="cheat-item green"><strong>Bakterid</strong>Kahjustavad puitu anaeroobses keskkonnas (sügaval pinnases ja vees – seened seal ei arene). Vedelike läbilaskevõime pikisuunas võib suureneda kuni 100×. Eestis vees vastupidavad: tamme, männi, jalaka ja lehise lülipuit ning sanglepp.</div>
+    </div>
+  </div>
+
+  <div class="cheat-section">
+    <div class="cheat-header">
+      <h3>🪲 Putukkahjurid</h3>
+      <span class="cheat-tag">Putukad</span>
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-item highlight"><strong>Mööbli-toonesepp (Anobium punctatum)</strong>Eestis kõige suuremat kahju põhjustav putukkahjur. Pruunikas mardikas ca 4–6 mm. Vastsed kaevandavad ~1 mm läbimõõduga käike. Vastsestaadium 2–6 aastat. Väljalennuava läbimõõt ~1–2 mm. Eelistab lehtpuid.</div>
+      <div class="cheat-item"><strong>Toonesepa arenemistingimused</strong>Optimaalne: temperatuur +21–24°C, suhteline õhuniiskus 60–90%, puidu niiskus 28–30%. Vastsed toituvad ka 12% niiskusega puidus +12°C juures. Alla 12% niiskuse vastsed ja munad hukkuvad. Vastsed hukkuvad üle +50°C. Kõik staadiumid hukkuvad alla −18°C (2 nädalat) või alla −30°C (1 nädal).</div>
+      <div class="cheat-item"><strong>Majasikk (Hylotrupes bajulus)</strong>Levinud peamiselt Lääne-Eesti saartel ja Loode-Eestis. Hallikas-must mardikas, 7–22 mm. Vastsed kuni 30 mm, kaevandavad kuni 10 mm laiuseid ovaalseid käike. Vastsete areng 2–12+ aastat! Väljalennuava 6–10 mm. Kahjustab ainult okaspuid, enamasti maltspuitu.</div>
+      <div class="cheat-item gold"><strong>Majasiku arenemistingimused</strong>Optimaalne: temperatuur +28–30°C, suhteline õhuniiskus 60–90%, puidu niiskus 15–25%. Alla 10% niiskuse hakkavad vastsed hukkuma. Vastsed hukkuvad üle +50–60°C.</div>
+      <div class="cheat-item green"><strong>Üldreegel putukkahjurite kohta</strong>Kuiva puitu enamik putukaid ei kahjusta. Valdav enamik kahjustab suure niiskussisaldusega, koorimata, maapinnaga kontaktis olevat, eelneva seenkahjustusega puitu. Toonesepp ja majasikk ei kahjusta männi ega lehise lülipuitu.</div>
+    </div>
+    <div class="table-wrap" style="margin-top:1rem">
+      <table>
+        <thead><tr><th>Kahjur</th><th>Suurus</th><th>Väljalennuava</th><th>Vastse areng</th><th>Eelistab</th></tr></thead>
+        <tbody>
+          <tr><td>Mööbli-toonesepp</td><td>4–6 mm</td><td>~1–2 mm (ümmargune)</td><td>2–6 aastat</td><td>Vanem puit, lehtpuud</td></tr>
+          <tr><td>Majasikk</td><td>7–22 mm</td><td>6–10 mm (ovaalne)</td><td>2–12+ aastat</td><td>Okaspuude maltspuit</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="cheat-section">
+    <div class="cheat-header">
+      <h3>📊 Vastupidavusklassid (EVS-EN 350:2016)</h3>
+      <span class="cheat-tag">Klassifikatsioon</span>
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-item highlight"><strong>Oluline põhimõte</strong>Klassifikatsioonid kehtivad ainult <strong>lülipuidule</strong>! Maltspuit ei ole ei mädaniku- ega putukakindel. Klassid näitavad kasutusiga maaga otseses kontaktis oleval puidul.</div>
+      <div class="cheat-item gold"><strong>Putukakindlus</strong>D = putukakindel · S = mitte putukakindel</div>
+    </div>
+    <div class="table-wrap" style="margin-top:1rem">
+      <table>
+        <thead><tr><th>Klass</th><th>Mädanikukindlus</th><th>Kasutusiga (maakontakt)</th><th>Eesti puuliigid</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Klass 1</strong></td><td>Väga vastupidav</td><td>25+ aastat</td><td>Harilik jugapuu (2 D)</td></tr>
+          <tr><td><strong>Klass 2</strong></td><td>Vastupidav</td><td>15–25 aastat</td><td>Jugapuu 2 D, Tamm 2–4 D</td></tr>
+          <tr><td><strong>Klass 3</strong></td><td>Mõõdukalt vastupidav</td><td>10–15 aastat</td><td>Mänd 3–4 D, Lehis 3–4 D</td></tr>
+          <tr><td><strong>Klass 4</strong></td><td>Vähe vastupidav</td><td>5–10 aastat</td><td>Jalakas 4 D, Kuusk 4 S</td></tr>
+          <tr><td><strong>Klass 5</strong></td><td>Mittevastupidav</td><td>0–5 aastat</td><td>Sanglepp 5 D?, Sookask 5 D?, Vaher 5 D?, Saar 5 D</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="cheat-section">
+    <div class="cheat-header">
+      <h3>🔬 Puidu vastupidavuse suurendamine</h3>
+      <span class="cheat-tag">Kaitse</span>
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-item"><strong>Parim kaitse (ilma kemikaalideta)</strong>Õige materjali valik · Puidu õige käitlemine alates raiest · Arhitektuursed lahendused (räästad, piisavad "ohvrikihid" – vooder, värv) · Ehituskvaliteet</div>
+      <div class="cheat-item"><strong>Pindmised võõbad (Pinotex jms)</strong>Tõstavad vastupidavust 1 klassi võrra, kuid ei saavuta maapinnaga otseses kontaktis olevale materjalile vajalikku kasutusklassi. Kaitseb ainult töödeldud pinnakihti.</div>
+      <div class="cheat-item highlight"><strong>Surveimmutus (Tanalith E)</strong>Fungitsiididega surveimmutus võib saavutada 1. klassile vastava vastupidavuse. Tanalith E sisaldab vaseühendeid ja orgaanilisi biotsiide (ei sisalda arseeni- ega kroomiühendeid). Immutussügavus oleneb ajast ja puuliigist – kuusel mõned millimeetrid.</div>
+      <div class="cheat-item gold"><strong>Termotöötlus (150–250°C)</strong>Kuumutatakse hapniku juurdepääsuta; hemitselluloos laguneb; hügroskoopsus väheneb ~50%; puidu stabiilsus väliskeskkonnale suureneb ~50%. Miinus: tihedus väheneb, mehhaanilised omadused (kõvadus, paindetugevus) vähenevad kuni 50%. Thermory: termosaar ja -kuusk klass 1, männil klass 2.</div>
+      <div class="cheat-item green"><strong>Õli-vaakumimmutus</strong>Puit immutatakse vaakumkambris kuuma isekõveneva õliga (enamasti linaõli). Puidu hügroskoopsus väheneb, tihedus suureneb, kõvadus suureneb. Võimalik saavutada kõrgeim vastupidavusklass. Eestis: Hansacom.ee.</div>
+      <div class="cheat-item"><strong>Atsetüleerimine – Accoya</strong>Töödeldakse vaakumkambris atsetüülanhüdriidiga. Hügroskoopsed OH-rühmad asendatakse hügrofoobsete atsetüülrühmadega. Hügroskoopsus väheneb kuni 80%. Tugevusomadused ei vähene. Puit: Pinus radiata (Uus-Meremaa). Eestis kasutatakse aknad, uksed, lipumastid jne.</div>
+      <div class="cheat-item"><strong>Furfureerimine – Kebony</strong>Immutatakse vaakumkambris furfurüülalkoholiga (saadakse maisi- ja suhkruroojääkidest) ja kuumutatakse. OH-rühmade arv väheneb, hügroskoopsus väheneb. Puidu tihedus suureneb (kiirjas mänd: 500 → 670 kg/m³). Võimalik saavutada kõrgeim vastupidavusklass. Eestis: Vivarec.ee.</div>
+    </div>
+  </div>
+
 </section>
 
 <!-- ============================= MEELESPEA ============================= -->
@@ -906,8 +1052,39 @@
     </div>
   </div>
 
+  <div class="cheat-section">
+    <div class="cheat-header">
+      <h3>🛡️ Puidu vastupidavus – kiirviide</h3>
+      <span class="cheat-tag">Vastupidavus</span>
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-item highlight"><strong>Tuli – põhiarvud</strong>Süttimistemperatuur pikaaegsel kuumutamisel: juba 150°C · Söekihi tekkimise kiirus: ca 0,6 mm/min · Söekihi soojusjuhtivus: ca 15% puidu omast</div>
+      <div class="cheat-item"><strong>UV-kahjustus</strong>Fotooksüdatsioon lagundab ligniini · Kahjustus kuni 3 mm/aastas · Lõunapoolsed pinnad kahjustuvad kiiremini</div>
+      <div class="cheat-item gold"><strong>Seente 3 klassi</strong>Hallitusseened (pinnapealsed) · Sinetusseened (tungivad sügavale) · Mädanikseened (lagundavad puitu). Esimesed kaks ei vähenda mehhaanilist tugevust!</div>
+      <div class="cheat-item"><strong>Seente tingimused</strong>Kuiva puitu seened ei kahjusta · Vajavad niiskust, hapnikku, soojust, toitaineid · pH 2–7 · Optimaalne niiskus mädanikseentele 40–80%</div>
+      <div class="cheat-item highlight"><strong>Putukad – peamised</strong>Mööbli-toonesepp: 4–6 mm, väljalennuava 1–2 mm, vastse areng 2–6 a, SUURIM KAHJU Eestis · Majasikk: 7–22 mm, väljalennuava 6–10 mm, vastse areng 2–12+ a, ainult okaspuud</div>
+      <div class="cheat-item green"><strong>Vastupidavusklassid (lülipuit!)</strong>Kl 1: &gt;25 a · Kl 2: 15–25 a · Kl 3: 10–15 a · Kl 4: 5–10 a · Kl 5: 0–5 a · D=putukakindel, S=mitte · Eesti: jugapuu 2D, tamm 2–4D, mänd 3–4D, kuusk 4S, saar 5D</div>
+      <div class="cheat-item"><strong>Kaitsemeetodid – vastupidavuse tõus</strong>Pinotex jms võõp: +1 klass · Surveimmutus Tanalith E: kuni kl 1 · Termoõtlus: kuni kl 1 (aga mehhaanilised omadused -50%) · Accoya (atsetüleerimine): hügroskoopsus −80% · Kebony (furfureerimine): tihedus suureneb</div>
+      <div class="cheat-item gold"><strong>Parim kaitse</strong>Keemia on kulukas ja mürgine. Parim: õige materjali valik + õige käitlemine alates raiest + arhitektuursed lahendused (räästad, ohvrikihid) + ehituskvaliteet</div>
+    </div>
+    <div class="table-wrap" style="margin-top:1rem">
+      <table>
+        <thead><tr><th>Puuliik</th><th>Mädanikuklass</th><th>Putukaklass</th></tr></thead>
+        <tbody>
+          <tr><td>Harilik jugapuu</td><td>2</td><td>D (putukakindel)</td></tr>
+          <tr><td>Harilik tamm</td><td>2–4</td><td>D (putukakindel)</td></tr>
+          <tr><td>Harilik mänd</td><td>3–4</td><td>D (putukakindel)</td></tr>
+          <tr><td>Euroopa lehis</td><td>3–4</td><td>D (putukakindel)</td></tr>
+          <tr><td>Harilik jalakas</td><td>4</td><td>D (putukakindel)</td></tr>
+          <tr><td>Harilik kuusk</td><td>4</td><td>S (ei ole putukakindel)</td></tr>
+          <tr><td>Sanglepp</td><td>5</td><td>D? (ebaselge)</td></tr>
+          <tr><td>Harilik saar</td><td>5</td><td>D (putukakindel)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 </section>
-</main>
 
 <script>
 // ============================= NAVIGATION =============================
@@ -943,6 +1120,21 @@ const cards = [
   { tag:'Niiskus puidus', q:'Millised on peamised niiskusklassid ja milleks neid kasutatakse?', a:'Mööblikuiv 6–10%: mööbel, sisustus, parkett. Tislerikuiv 10–15%: uksed, aknad. Hööveldamiskuiv 15–19%: pindade töötlemine. Eksportkuiv 20%. Eesti kliimas on vabaõhukuivatus max ~20% – tislerikuivaks ei muutu puit õues ka 100 aastaga!' },
   { tag:'Niiskus puidus', q:'Mis on kuivamisdefektid ja kuidas tekivad otslõhed?', a:'Otslõhed tekivad, sest puidu otspind kuivab kiiremini kui sisemised kihid. Välimised kihid kahanevad, sisemised hoiavad mahu → tekivad tõmbepinged ja lõhed (enamasti säsikiirte juurde). Välditav otspindade katmisega parafiinvahaga.' },
   { tag:'Niiskus puidus', q:'Kuidas erineb vabaõhukuivamise kiirus saematerjali paksuse järgi?', a:'Okaspuud rusikareegel – 1 toll aastas + üks lisaaasta. Praktikas: 25mm (1") → 1 aasta, 50mm (2") → 3 aastat, 75mm (3") → 4 aastat, 100mm (4") → 5 aastat. Eesti kliimas on vabaõhus tasakaaluniiskus ca 20%.' },
+  // === VASTUPIDAVUS ===
+  { tag:'Vastupidavus', q:'Mis temperatuuril võib pikaaegsel kuumutamisel puit süttida ja mis mõjutab süttimist?', a:'Pikaaegsel kuumutamisel võib süttimistemperatuur olla juba 150°C juures. Suurema tihedusega ja niiskussisaldusega puit süttib aeglasemalt.' },
+  { tag:'Vastupidavus', q:'Mis on söekihi tekkimise kiirus ja mis on söekihi roll tulekahjus?', a:'Söekihi tekkimise kiirus on ca 0,6 mm/min. Söekihi soojusjuhtivus on ca 15% puidu soojusjuhtivusest – see aeglustab põlemist ja kaitseb puidu sisekihte kuumuse eest.' },
+  { tag:'Vastupidavus', q:'Mis protsess kahjustab puitu UV-kiirguse toimel ja mida see lagundab?', a:'UV-kiirguse ja hapniku koostoimel tekkiv fotooksüdatsioon kahjustab puitu, lagundades peamiselt ligniini. Kahjustunud puit muutub hapraks, poorsus ja veeimamisvõime suurenevad, luues soodsa keskkonna patogeenidele.' },
+  { tag:'Vastupidavus', q:'Millised kolm seeneklassi kahjustavad puitu ja milles seisneb nende erinevus?', a:'1) Hallitusseened – pinnapealsed, muudavad värvi, ei vähenda tugevust. 2) Sinetusseened – tungivad sügavale säsikiirtest alustades, muudavad värvi, ei vähenda tugevust. 3) Mädanikseened – lagundavad puitu mehaaniliselt. Esimesed kaks hõlbustavad nakatumist mädanikseentega.' },
+  { tag:'Vastupidavus', q:'Millised tingimused on vajalikud puitu kahjustavate seente arenemiseks?', a:'Seened ei kahjusta kuiva puitu! Arenemiseks vajavad eosed: toitaineid, hapnikku, soojust, niiskust ja pH taset 2–7. Mädanikseentele sobib optimaalne niiskus 40–80% ja temperatuur 25–32°C.' },
+  { tag:'Vastupidavus', q:'Mis on majavamm (Serpula lacrymans) ja miks ta on kõige ohtlikum seen ehitistes?', a:'Majavamm on ohtlikem pruunmädanikku tekitav seen Eesti ehitistes. Iseloomulik: pindmine mütseel on kiuline/vatjas, valge, kollakad või punakaslillakad laigud. Seeneväädid tugevad, hallikad/tumepruunid, kuni 5 mm laiad, näha ka juhtseeneniite.' },
+  { tag:'Vastupidavus', q:'Miks kahjustavad pruunmädanikseened peamiselt Eesti ehitisi?', a:'Kuna Eestis kasutatakse ehituses enamasti okaspuupuitu, siis põhilised mädanikkahjustusi tekitavad seened konstruktsioonides on pruunmädanikseened. Valgemädanikseened kahjustavad enamasti lehtpuid.' },
+  { tag:'Vastupidavus', q:'Mis on mööbli-toonesepp (Anobium punctatum) ja kuidas ta puitu kahjustab?', a:'Mööbli-toonesepp on Eestis kõige suuremat kahju põhjustav puidu kahjurputukas. Pruunikas mardikas ca 4–6 mm. Vastsed kaevandavad ~1 mm käike puidus. Vastsestaadium kestab enamasti paar aastat (kuni 6 a). Väljalennuava ~1–2 mm. Valmikud ei toitu.' },
+  { tag:'Vastupidavus', q:'Millised on mööbli-toonesepa arenemistingimused ja kuidas ta hävib?', a:'Optimaalne: temperatuur +21–24°C, suhteline õhuniiskus 60–90%, puidu niiskus 28–30%. Vastsed toituvad ka 12% niiskusega puidus. Alla 12% niiskuse munad ja vastsed hukkuvad. Vastsed hukkuvad üle +50°C. Kõik staadiumid hukkuvad alla −18°C (2 nädalat) või alla −30°C (1 nädal).' },
+  { tag:'Vastupidavus', q:'Mis on EVS-EN 350:2016 vastupidavusklassid ja millele need kehtivad?', a:'5 klassi mädanikukindluse järgi: Kl 1 = väga vastupidav, 25+ aastat; Kl 2 = vastupidav, 15–25 a; Kl 3 = mõõdukalt, 10–15 a; Kl 4 = vähe, 5–10 a; Kl 5 = mittevastupidav, 0–5 a. TÄHTIS: kehtivad ainult lülipuidule! Maltspuit ei ole ei mädaniku- ega putukakindel.' },
+  { tag:'Vastupidavus', q:'Millised on Eesti põhiliste puuliikide vastupidavusklassid?', a:'Harilik jugapuu 2 D · Harilik tamm 2–4 D · Harilik mänd 3–4 D · Euroopa lehis 3–4 D · Harilik jalakas 4 D · Harilik kuusk 4 S · Sanglepp 5 D? · Harilik saar 5 D. D = putukakindel, S = mitte putukakindel.' },
+  { tag:'Vastupidavus', q:'Mis on termotöötluse põhimõte ja millised on selle plussid ja miinused?', a:'Puit kuumutatakse hapniku juurdepääsuta 150–250°C. Hemitselluloos laguneb → hügroskoopsus väheneb ~50%, stabiilsus suureneb. Miinus: tihedus väheneb, mehhaanilised omadused (kõvadus, paindetugevus) vähenevad kuni 50%! Thermory termosaar/-kuusk: klass 1.' },
+  { tag:'Vastupidavus', q:'Mis on Accoya puit ja kuidas atsetüleerimine töötab?', a:'Accoya on atsetüleeritud puit (Pinus radiata). Töödeldakse vaakumkambris atsetüülanhüdriidiga: hügroskoopsed OH-rühmad asendatakse hügrofoobsete atsetüülrühmadega (−COCH₃). Hügroskoopsus väheneb kuni 80%. Tugevusomadused ei vähene! Kasutatakse akende, uste, lipumastide tootmiseks.' },
+  { tag:'Vastupidavus', q:'Mis on Kebony puit ja mis on furfurüülalkohol?', a:'Kebony on furfurüüleeritud puit. Furfurüülalkohol saadakse maisi- ja suhkruroojääkidest. Puit immutatakse vaakumkambris ja kuumutatakse: OH-rühmade arv väheneb, hügroskoopsus väheneb, tihedus suureneb (kiirjas mänd: 500 → 670 kg/m³). Võimalik saavutada kõrgeim vastupidavusklass. Eestis: Vivarec.ee.' },
 ];
 
 let currentCard = 0;
@@ -1314,6 +1506,122 @@ const questions = [
     opts: ['Tangentsiaalne : radiaalne : pikikiudu = 2 : 1 : 0,1','Tangentsiaalne : radiaalne : pikikiudu = 1 : 2 : 25','Kõikides suundades kuivab puit ühtlaselt','Pikikiudu on kuivamine kõige aeglasem'],
     correct: 1,
     fb: 'Kuivamiskiiruse suhe: Tangentsiaalne : Radiaalne : Pikisuund = 1 : 2 : 25! See tähendab, et pikisuunas kuivab puit 25× kiiremini kui tangentsiaalselt ja 12,5× kiiremini kui radiaalselt. Seepärast tekivad otslõhed esimesena.'
+  },
+
+  // === VASTUPIDAVUS ===
+  {
+    q: 'Mis temperatuuril võib pikaaegsel kuumutamisel puit süttida?',
+    opts: ['Alates 300°C','Alati 400°C juures','Juba 150°C juures','Mitte alla 500°C'],
+    correct: 2,
+    fb: 'Pikaaegsel kuumutamisel võib süttimistemperatuur olla juba 150°C juures. Suurema tihedusega ja niiskussisaldusega puit süttib aeglasemalt.'
+  },
+  {
+    q: 'Mis on söekihi tekkimise kiirus ja miks söekiht kaitseb puitu tulekahjus?',
+    opts: ['5 mm/min; söekiht on kergesti põlev','Ca 0,6 mm/min; söekihi soojusjuhtivus on ca 15% puidu omast – kaitseb sisekihte kuumuse eest','2 mm/min; söekiht kustutab leegi','Ca 0,1 mm/min; söekiht on täiesti mittesoojusjuhtiv'],
+    correct: 1,
+    fb: 'Söekihi tekkimise kiirus on ca 0,6 mm/min. Söekihi soojusjuhtivus on ca 15% puidu soojusjuhtivusest – see aeglustab põlemist ja kaitseb puidu sisekihte kuumuse eest.'
+  },
+  {
+    q: 'Mis protsess kahjustab puitu UV-kiirguse ja hapniku koostoimel?',
+    opts: ['Hüdrolüüs – vee molekulid lõhustavad tselluloosi','Fotooksüdatsioon – lagundab peamiselt ligniini','Pürolüüs – keemiliste ühendite lagunemine kuumutamisel','Karbonisatsioon – süsinikuühendite teke'],
+    correct: 1,
+    fb: 'UV-kiirguse ja hapniku koostoimel tekkiv fotooksüdatsioon kahjustab puitu, lagundades peamiselt ligniini. Kahjustunud puit muutub hapraks, poorsus ja veeimamisvõime suurenevad, luues soodsa keskkonna patogeenidele.'
+  },
+  {
+    q: 'Kui suur võib olla UV-kiirgusest tingitud puidu kahjustuse määr aastas?',
+    opts: ['Kuni 0,1 mm aastas','Kuni 1 mm aastas','Kuni 3 mm aastas','Kuni 10 mm aastas'],
+    correct: 2,
+    fb: 'UV-kiirgusest tingitud kahjustuse määr võib olla kuni 3 mm aastas. Hoonete lõunapoolsetel osadel on kahjustus märgatavalt kiirem ja suurema ulatusega.'
+  },
+  {
+    q: 'Millised kolm klassi jaotatakse puitu kahjustavad seened?',
+    opts: ['Hallitusseened, sinetusseened, mädanikseened','Pruunseened, valgeseened, mustad seened','Okaspuuseened, lehtpuuseened, maaseened','Laomädanik, metsamädanik, pehmemädanik'],
+    correct: 0,
+    fb: 'Puitu kahjustavad seened jaotatakse kolme klassi: hallitusseened, sinetusseened ja mädanikseened. Kaks esimest rikuvad puidu välimust, tekitades värvimuutusi, kuid ei vähenda mehhaanilist tugevust.'
+  },
+  {
+    q: 'Kas hallitusseened ja sinetusseened vähendavad puidu mehhaanilist tugevust?',
+    opts: ['Jah, mõlemad vähendavad tugevust kuni 50%','Ei, kuid need hõlbustavad puidu nakatumist mädanikseentega','Jah, sinetusseened vähendavad tugevust oluliselt','Ei, need seened ei mõjuta puitu üldse'],
+    correct: 1,
+    fb: 'Hallitusseened ja sinetusseened ei vähenda puidu mehhaanilist tugevust! Kuid need hõlbustavad puidu nakatumist mädanikseentega. Sinetusseened alustavad hävitustööd säsikiirtest ja kahjustavad ka koobaspooride membraane.'
+  },
+  {
+    q: 'Milline on kõige ohtlikum seen Eesti ehitistes?',
+    opts: ['Männi-mädiknahkis (Leucogyrophana pinastri)','Majamädik (Coniophora puteana)','Majavamm (Serpula lacrymans)','Kuuse-juurepess (Heterobasidion parviporum)'],
+    correct: 2,
+    fb: 'Majavamm (Serpula lacrymans) on ohtlikim pruunmädanikku tekitav seen Eesti ehitistes. Iseloomulik: kiuline/vatjas valge pindmine mütseel kollakate/punakaslillakate laikudega ning tugevad seeneväädid kuni 5 mm laiad.'
+  },
+  {
+    q: 'Miks kahjustavad pruunmädanikseened peamiselt Eesti ehitisi?',
+    opts: ['Sest Eestis on väga niiske kliima','Sest Eestis kasutatakse ehituses enamasti okaspuupuitu ja pruunmädanikseened kahjustavad just okaspuupuitu','Sest valgemädanikseened on kõik hävitatud','Sest pruunmädanikseened on kõige laiemalt levinud kogu maailmas'],
+    correct: 1,
+    fb: 'Kuna Eestis kasutatakse ehituses enamasti okaspuupuitu, siis põhilised mädanikkahjustusi tekitavad seened konstruktsioonides on pruunmädanikseened. Pruunmädanikku tekitavad seened kahjustavad enamasti okaspuupuitu, valgemädanikseened lehtpuupuitu.'
+  },
+  {
+    q: 'Milline on Eestis kõige suuremat kahju põhjustav puidu kahjurputukas?',
+    opts: ['Majasikk (Hylotrupes bajulus)','Mööbli-toonesepp (Anobium punctatum)','Haavataelik (Phellinus tremulae)','Majanääts (Antrodia sinuosa)'],
+    correct: 1,
+    fb: 'Mööbli-toonesepp (Anobium punctatum) on Eestis kõige suuremat kahju põhjustav puidu kahjurputukas. Pruunikas mardikas ca 4–6 mm, vastsed kaevandavad ~1 mm käike puidus, vastsestaadium kestab paar kuni kuus aastat.'
+  },
+  {
+    q: 'Millised on mööbli-toonesepa väljalennuava mõõdud ja vastse arengu kestus?',
+    opts: ['Väljalennuava 6–10 mm, vastse areng 10–20 aastat','Väljalennuava ~1–2 mm (ümmargune), vastse areng enamasti paar aastat (kuni 6 aastat)','Väljalennuava 5 mm, vastse areng 1 aasta','Väljalennuava 3–4 mm, vastse areng 15 aastat'],
+    correct: 1,
+    fb: 'Mööbli-toonesepa väljalennuava läbimõõt on ca 1–2 mm ja see on ümmargune. Vastsestaadium kestab enamasti paar aastat, kuid võib ulatuda ka kuue aastani. Vastsed kaevandavad ~1 mm läbimõõduga käike puidus.'
+  },
+  {
+    q: 'Mis puidu niiskussisalduse juures hakkavad mööbli-toonesepa vastsed ja munad hukkuma?',
+    opts: ['Alla 30% niiskuse','Alla 20% niiskuse','Alla 12% niiskuse','Alla 5% niiskuse'],
+    correct: 2,
+    fb: 'Alla 12% puidu niiskussisalduse hakkavad mööbli-toonesepa vastsed ja munad hukkuma. Vastsed hukkuvad ka kui temperatuur tõuseb üle +50°C või alla −18°C kahe nädala jooksul (või alla −30°C ühe nädalaga).'
+  },
+  {
+    q: 'Milles erineb majasikk mööbli-toonesepast?',
+    opts: ['Majasikk on väiksem ja kahjustab lehtpuid','Majasikk on suurem (7–22 mm), kahjustab ainult okaspuid, vastse areng 2–12+ aastat, väljalennuava 6–10 mm (ovaalne)','Majasikk on levinud üle kogu Eesti ühtlaselt','Majasiku vastsed hukkuvad alla 20% niiskuse'],
+    correct: 1,
+    fb: 'Majasikk on suurem: 7–22 mm (vs toonesepp 4–6 mm). Kahjustab ainult okaspuude maltspuitu. Vastse areng 2–12+ aastat. Väljalennuava 6–10 mm ja ovaalne (vs toonesepp 1–2 mm, ümmargune). Levinud peamiselt Lääne-Eesti saartel ja Loode-Eestis.'
+  },
+  {
+    q: 'Mida tähendab EVS-EN 350:2016 vastupidavusklassides tähis "D" ja "S"?',
+    opts: ['D = durable (vastupidav kõike suhtes), S = sensitive (tundlik)','D = putukakindel, S = mitte putukakindel','D = dry (kuiv), S = soft (pehme)','D = densified (tihendatud), S = standard'],
+    correct: 1,
+    fb: 'EVS-EN 350:2016 järgi: D = putukakindel (durable against insects), S = mitte putukakindel (susceptible). Näiteks kuusk on klass 4 S – vähe vastupidav mädanikule ja EI OLE putukakindel.'
+  },
+  {
+    q: 'Millele kehtivad EVS-EN 350:2016 mädaniku- ja putukakindluse klassid?',
+    opts: ['Kogu puidu ristlõikele','Ainult lülipuidule – maltspuit ei ole ei mädaniku- ega putukakindel','Ainult maltspuidule','Nii lüli- kui maltspuidule võrdselt'],
+    correct: 1,
+    fb: 'Need klassifikatsioonid kehtivad ainult lülipuidule! Maltspuit ei ole ei mädaniku- ega putukakindel, sõltumata puuliigist. See on väga oluline teada materjali valikul ja konstruktsiooni projekteerimisel.'
+  },
+  {
+    q: 'Milline on harilik kuusk vastupidavusklassi ja putukakindluse järgi?',
+    opts: ['Klass 1 D – väga vastupidav ja putukakindel','Klass 2 D – vastupidav ja putukakindel','Klass 4 S – vähe vastupidav ja EI OLE putukakindel','Klass 3 D – mõõdukalt vastupidav ja putukakindel'],
+    correct: 2,
+    fb: 'Harilik kuusk on vastupidavusklassis 4 S: vähe vastupidav (kasutusiga maakontaktis 5–10 aastat) ja EI OLE putukakindel (S = susceptible). See tähendab, et kuusk vajab kaitset nii mädaniku- kui putukkahjurite vastu.'
+  },
+  {
+    q: 'Mis on termotöötluse peamine negatiivne külg vaatamata paremale vastupidavusele?',
+    opts: ['Puit muutub pruunikaks ja kaotab loomuliku värvuse','Mehhaanilised omadused (kõvadus, paindetugevus) vähenevad kuni 50% – tuleb arvestada projekteerimisel','Termotöötlus ei anna piisavat vastupidavust','Termotöödeldud puit imab rohkem vett kui töötlemata puit'],
+    correct: 1,
+    fb: 'Termotöötlusel vähenevad oluliselt puidu mehhaanilised omadused – kõvadus, hõõrdetakistus ja paindetugevus vähenevad kuni 50%! Seda tuleb arvestada projekteerimisel. Samuti väheneb tihedus ja sellega koos soojusjuhtivus (20–25%).'
+  },
+  {
+    q: 'Mis on Accoya puidu peamine eelis ja milline on selle tootmisprotsess?',
+    opts: ['Accoya on termotöödeldud puit; eeliseks madal tihedus','Accoya on atsetüleeritud puit – OH-rühmad asendatakse atsetüülrühmadega; hügroskoopsus väheneb kuni 80%, tugevusomadused ei vähene','Accoya on surveimmutatud puit Tanalith E-ga','Accoya on furfurüüleeritud puit; eeliseks suurenev tihedus'],
+    correct: 1,
+    fb: 'Accoya on atsetüleeritud puit (patenteeritud, hollandlased). Töödeldakse vaakumkambris atsetüülanhüdriidiga: hügroskoopsed OH-rühmad asendatakse hügrofoobsete atsetüülrühmadega. Hügroskoopsus väheneb kuni 80%! Tugevusomadused ei vähene. Tooraine: Pinus radiata.'
+  },
+  {
+    q: 'Mis on parim meetod konstruktsioonide kaitsmiseks mädanikust?',
+    opts: ['Kõige parem on alati surveimmutus Tanalith E-ga','Keemia on kulukas ja mürgine; parim on õige materjali valik + õige käitlemine alates raiest + arhitektuursed lahendused (räästad, ohvrikihid) + ehituskvaliteet','Alati tuleb kasutada Accoya puitu','Pinotex on kõige tõhusam kaitsevahend'],
+    correct: 1,
+    fb: 'Keemia on kulukas ja mürgine. Parim meetod: õige materjali valik + puidu õige käitlemine alates raiest + puidu omadusi arvestavad arhitektuursed lahendused (räästad, piisavad ohvrikihid – vooder, värv) + ehituskvaliteet.'
+  },
+  {
+    q: 'Millised Eesti puuliigid on vees hea vastupidavusega?',
+    opts: ['Kuusk ja kask','Tamme, männi, jalaka ja lehise lülipuit ning sanglepp','Kõik okaspuud on vees vastupidavad','Haab ja pärn'],
+    correct: 1,
+    fb: 'Eestis kasvavatest puudest on vees hea vastupidavusega tamme, männi, jalaka ja lehise lülipuit ning sanglepp. Pikaajaline veega kokkupuude põhjustab leostumist ja hüdrolüüsi, mille tulemusel puidu tugevus väheneb oluliselt.'
   },
 ];
 
