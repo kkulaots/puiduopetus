@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Puiduõpetus – Interaktiivne õppimisvahend</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bark: #3d2b1f;
+    --heartwood: #7a4a2e;
+    --sapwood: #c8956c;
+    --cream: #f5ead8;
+    --parchment: #ede0c8;
+    --ring1: #d4a97a;
+    --ring2: #b8844f;
+    --leaf: #4a7c59;
+    --leaf-light: #6aab7a;
+    --accent: #c0392b;
+    --gold: #c9882a;
+    --text: #2a1a0e;
+    --text-light: #5a3d28;
+    --shadow: rgba(61,43,31,0.18);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background-color: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(122,74,46,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 100%, rgba(74,124,89,0.06) 0%, transparent 60%);
+  }
+
+  /* === HEADER === */
+  header {
+    background: linear-gradient(135deg, var(--bark) 0%, var(--heartwood) 60%, var(--sapwood) 100%);
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 18px,
+      rgba(255,255,255,0.025) 18px,
+      rgba(255,255,255,0.025) 20px
+    );
+    pointer-events: none;
+  }
+  header::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 6px;
+    background: linear-gradient(90deg, var(--leaf), var(--gold), var(--leaf-light), var(--gold), var(--leaf));
+  }
+  .header-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: var(--parchment);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.3rem 1rem;
+    border-radius: 2rem;
+    margin-bottom: 0.8rem;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.35);
+  }
+  header p {
+    margin-top: 0.6rem;
+    color: rgba(255,235,215,0.85);
+    font-size: 0.95rem;
+    font-style: italic;
+  }
+
+  /* === NAV === */
+  nav {
+    background: var(--bark);
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 3px 12px var(--shadow);
+  }
+  nav button {
+    background: none;
+    border: none;
+    color: rgba(245,234,216,0.75);
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 0.95rem 1.4rem;
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s;
+    position: relative;
+    display: flex; align-items: center; gap: 0.45rem;
+  }
+  nav button .nav-icon { font-size: 1rem; }
+  nav button:hover { color: var(--cream); background: rgba(255,255,255,0.07); }
+  nav button.active {
+    color: var(--gold);
+    background: rgba(201,136,42,0.12);
+  }
+  nav button.active::after {
+    content: '';
+    position: absolute; bottom: 0; left: 15%; right: 15%; height: 3px;
+    background: var(--gold);
+    border-radius: 2px 2px 0 0;
+  }
+
+  /* === MAIN === */
+  main { max-width: 980px; margin: 0 auto; padding: 2rem 1.2rem 4rem; }
+
+  .section { display: none; animation: fadeSlide 0.4s ease; }
+  .section.active { display: block; }
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--bark);
+    margin-bottom: 1.6rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 2px solid var(--ring1);
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .section-title .icon { font-size: 1.5rem; }
+
+  /* === KOKKUVÕTE === */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.2rem;
+  }
+  .summary-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 14px var(--shadow);
+    overflow: hidden;
+    border-top: 4px solid var(--heartwood);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .summary-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px var(--shadow); }
+  .summary-card:nth-child(2) { border-top-color: var(--leaf); }
+  .summary-card:nth-child(3) { border-top-color: var(--gold); }
+  .summary-card-header {
+    padding: 1rem 1.2rem 0.7rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .summary-card-header .card-icon {
+    width: 36px; height: 36px;
+    background: var(--parchment);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+  }
+  .summary-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--bark);
+  }
+  .summary-card ul {
+    padding: 0 1.2rem 1.2rem 2.4rem;
+    list-style: none;
+  }
+  .summary-card ul li {
+    padding: 0.32rem 0;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    line-height: 1.55;
+    position: relative;
+  }
+  .summary-card ul li::before {
+    content: '›';
+    position: absolute; left: -1rem;
+    color: var(--heartwood);
+    font-weight: 700;
+  }
+
+  .mantra-box {
+    margin-top: 1.4rem;
+    background: linear-gradient(135deg, var(--bark), var(--heartwood));
+    border-radius: 10px;
+    padding: 1.4rem 1.6rem;
+    color: var(--cream);
+    box-shadow: 0 4px 18px var(--shadow);
+  }
+  .mantra-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    margin-bottom: 0.9rem;
+    display: flex; align-items: center; gap: 0.5rem;
+    color: var(--gold);
+  }
+  .mantra-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.7rem;
+  }
+  .mantra-item {
+    background: rgba(255,255,255,0.08);
+    border-left: 3px solid var(--ring1);
+    padding: 0.6rem 0.8rem;
+    border-radius: 0 6px 6px 0;
+  }
+  .mantra-item strong {
+    display: block;
+    color: var(--parchment);
+    font-size: 0.88rem;
+    margin-bottom: 0.2rem;
+  }
+  .mantra-item span {
+    font-size: 0.8rem;
+    color: rgba(245,234,216,0.75);
+    font-style: italic;
+  }
+
+  /* === FLASHCARDS === */
+  .fc-controls {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1.4rem; flex-wrap: wrap; gap: 0.7rem;
+  }
+  .fc-progress { color: var(--text-light); font-size: 0.9rem; font-style: italic; }
+  .fc-progress span { font-weight: 700; color: var(--heartwood); }
+  .fc-btn-group { display: flex; gap: 0.5rem; }
+  .btn {
+    padding: 0.55rem 1.2rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .btn-primary { background: var(--heartwood); color: #fff; }
+  .btn-primary:hover { background: var(--bark); }
+  .btn-secondary { background: var(--parchment); color: var(--bark); border: 1.5px solid var(--ring1); }
+  .btn-secondary:hover { background: var(--ring1); color: var(--bark); }
+  .btn-leaf { background: var(--leaf); color: #fff; }
+  .btn-leaf:hover { background: #3a6047; }
+
+  .flashcard-container {
+    perspective: 1200px;
+    height: 280px;
+    margin-bottom: 1.5rem;
+    cursor: pointer;
+  }
+  .flashcard {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(.4,0,.2,1);
+  }
+  .flashcard.flipped { transform: rotateY(180deg); }
+  .fc-face {
+    position: absolute; inset: 0;
+    backface-visibility: hidden;
+    border-radius: 14px;
+    padding: 2rem;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    box-shadow: 0 4px 24px var(--shadow);
+  }
+  .fc-front {
+    background: linear-gradient(145deg, #fff 0%, var(--parchment) 100%);
+    border: 2px solid var(--ring1);
+  }
+  .fc-back {
+    background: linear-gradient(145deg, var(--heartwood) 0%, var(--bark) 100%);
+    transform: rotateY(180deg);
+    border: 2px solid var(--bark);
+  }
+  .fc-tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.8rem;
+    border-radius: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+  .fc-front .fc-tag { background: var(--parchment); color: var(--heartwood); border: 1px solid var(--ring1); }
+  .fc-back .fc-tag { background: rgba(255,255,255,0.15); color: var(--parchment); }
+  .fc-front .fc-question {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1rem, 3vw, 1.35rem);
+    color: var(--bark);
+    line-height: 1.45;
+  }
+  .fc-back .fc-answer {
+    color: var(--cream);
+    font-size: clamp(0.88rem, 2.5vw, 1.05rem);
+    line-height: 1.6;
+  }
+  .fc-hint { color: rgba(90,61,40,0.5); font-size: 0.78rem; margin-top: 1rem; font-style: italic; }
+  .fc-back .fc-hint { color: rgba(245,234,216,0.5); }
+
+  .fc-nav {
+    display: flex; justify-content: center; align-items: center; gap: 1rem;
+  }
+  .fc-nav button { min-width: 120px; }
+  .fc-dots {
+    display: flex; gap: 0.4rem; justify-content: center; margin-top: 1rem;
+  }
+  .fc-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--ring1);
+    transition: background 0.2s, transform 0.2s;
+  }
+  .fc-dot.active { background: var(--heartwood); transform: scale(1.4); }
+
+  /* === VIKTORIIN === */
+  .quiz-header {
+    background: linear-gradient(135deg, var(--bark), var(--heartwood));
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    color: var(--cream);
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.7rem;
+  }
+  .quiz-info { display: flex; gap: 1.5rem; }
+  .quiz-stat { text-align: center; }
+  .quiz-stat .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--gold);
+    display: block;
+  }
+  .quiz-stat .lbl { font-size: 0.75rem; color: rgba(245,234,216,0.7); }
+  .progress-bar-wrap { flex: 1; min-width: 150px; }
+  .progress-bar-label { font-size: 0.78rem; margin-bottom: 0.3rem; }
+  .progress-bar {
+    height: 8px; background: rgba(255,255,255,0.15);
+    border-radius: 4px; overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%; background: var(--gold);
+    border-radius: 4px; transition: width 0.4s;
+  }
+
+  .question-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.6rem 1.8rem;
+    box-shadow: 0 3px 18px var(--shadow);
+    margin-bottom: 1.2rem;
+    border-left: 5px solid var(--heartwood);
+  }
+  .question-card.correct { border-left-color: var(--leaf); }
+  .question-card.wrong { border-left-color: var(--accent); }
+  .q-number {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--heartwood);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .q-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--bark);
+    margin-bottom: 1.2rem;
+    line-height: 1.5;
+  }
+  .options { display: flex; flex-direction: column; gap: 0.6rem; }
+  .option {
+    padding: 0.8rem 1.1rem;
+    border-radius: 8px;
+    border: 2px solid var(--parchment);
+    background: var(--cream);
+    cursor: pointer;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.92rem;
+    color: var(--text);
+    transition: all 0.18s;
+    text-align: left;
+    display: flex; align-items: center; gap: 0.7rem;
+  }
+  .option:hover:not(:disabled) { border-color: var(--ring2); background: var(--parchment); }
+  .option:disabled { cursor: default; }
+  .option.selected-correct { border-color: var(--leaf); background: rgba(74,124,89,0.1); color: #2a5a38; }
+  .option.selected-wrong { border-color: var(--accent); background: rgba(192,57,43,0.08); color: #7a1a0e; }
+  .option.show-correct { border-color: var(--leaf); background: rgba(74,124,89,0.06); }
+  .opt-marker {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--parchment);
+    border: 2px solid var(--ring1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.78rem; font-weight: 700;
+    flex-shrink: 0;
+    transition: all 0.18s;
+  }
+  .option.selected-correct .opt-marker { background: var(--leaf); border-color: var(--leaf); color: #fff; }
+  .option.selected-wrong .opt-marker { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .option.show-correct .opt-marker { background: var(--leaf); border-color: var(--leaf); color: #fff; }
+  .feedback-msg {
+    margin-top: 0.9rem;
+    padding: 0.7rem 1rem;
+    border-radius: 7px;
+    font-size: 0.88rem;
+    display: none;
+    line-height: 1.5;
+  }
+  .feedback-msg.correct { background: rgba(74,124,89,0.12); color: #2a5a38; display: block; }
+  .feedback-msg.wrong { background: rgba(192,57,43,0.1); color: #7a1a0e; display: block; }
+
+  .quiz-result {
+    display: none;
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px var(--shadow);
+  }
+  .quiz-result.show { display: block; }
+  .result-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    font-weight: 900;
+    color: var(--heartwood);
+    line-height: 1;
+  }
+  .result-label { color: var(--text-light); font-size: 1rem; margin-bottom: 1.5rem; }
+  .result-msg { font-size: 1.1rem; color: var(--bark); margin-bottom: 1.5rem; font-style: italic; }
+
+  /* === MEELESPEA === */
+  .cheat-section { margin-bottom: 2rem; }
+  .cheat-header {
+    display: flex; align-items: center; gap: 0.6rem;
+    margin-bottom: 0.9rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--parchment);
+  }
+  .cheat-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: var(--heartwood);
+  }
+  .cheat-tag {
+    margin-left: auto;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.7rem;
+    border-radius: 2rem;
+    background: var(--parchment);
+    color: var(--heartwood);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .cheat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 0.9rem;
+  }
+  .cheat-item {
+    background: #fff;
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    border-left: 4px solid var(--ring1);
+    box-shadow: 0 1px 8px rgba(61,43,31,0.08);
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--text-light);
+  }
+  .cheat-item strong {
+    display: block;
+    color: var(--bark);
+    font-size: 0.92rem;
+    margin-bottom: 0.2rem;
+  }
+  .cheat-item.highlight { border-left-color: var(--accent); background: rgba(192,57,43,0.03); }
+  .cheat-item.green { border-left-color: var(--leaf); }
+  .cheat-item.gold { border-left-color: var(--gold); }
+
+  .formula-box {
+    background: linear-gradient(135deg, var(--parchment), #f0e4cc);
+    border: 2px solid var(--ring2);
+    border-radius: 10px;
+    padding: 1rem 1.3rem;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.9rem;
+    color: var(--text);
+    margin-bottom: 0.9rem;
+  }
+  .formula-box code {
+    display: block;
+    background: rgba(255,255,255,0.6);
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 0.88rem;
+    color: var(--bark);
+    margin-top: 0.5rem;
+    letter-spacing: 0.02em;
+  }
+
+  .table-wrap { overflow-x: auto; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.87rem;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+  th {
+    background: var(--heartwood);
+    color: var(--cream);
+    padding: 0.65rem 0.9rem;
+    text-align: left;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    font-family: 'Source Serif 4', serif;
+  }
+  td {
+    padding: 0.55rem 0.9rem;
+    border-bottom: 1px solid var(--parchment);
+    color: var(--text-light);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: rgba(245,234,216,0.3); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--parchment); }
+  ::-webkit-scrollbar-thumb { background: var(--ring2); border-radius: 3px; }
+
+  @media (max-width: 600px) {
+    nav button { padding: 0.8rem 0.9rem; font-size: 0.8rem; }
+    .flashcard-container { height: 320px; }
+    .quiz-info { gap: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-badge">TÜ VKA · Andres Ansper · 2015</div>
+  <h1>🌲 Puiduõpetus</h1>
+  <p>Interaktiivne õppimisvahend · Puidu ehitus, tugevus ja materjali klassifikatsioon</p>
+</header>
+
+<nav id="nav">
+  <button class="active" onclick="showSection('kokkuvote', this)"><span class="nav-icon">📋</span> Kokkuvõte</button>
+  <button onclick="showSection('flashcards', this)"><span class="nav-icon">🃏</span> Flashcard-id</button>
+  <button onclick="showSection('viktoriin', this)"><span class="nav-icon">🎯</span> Viktoriin</button>
+  <button onclick="showSection('puiduliigid_sec', this)"><span class="nav-icon">🌲</span> Puiduliigid</button>
+  <button onclick="showSection('meelespea', this)"><span class="nav-icon">📌</span> Meelespea</button>
+</nav>
+
+<main>
+
+<!-- ============================= KOKKUVÕTE ============================= -->
+<section id="kokkuvote" class="section active">
+  <h2 class="section-title"><span class="icon">📋</span> Kokkuvõte põhiteemadest</h2>
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-card-header">
+        <div class="card-icon">🌳</div>
+        <h3>I · Puidu ehitus</h3>
+      </div>
+      <ul>
+        <li>Puit = lignifitseerunud (puitunud) taimekude; botaaniliselt kambiumi moodustatud sekundaarne ksüleem</li>
+        <li>Keemiline koostis: tselluloos 40–50%, hemitselluloos 25–35%, ligniin 20–30%</li>
+        <li>Okaspuud (gümnospermid) vs lehtpuud (angiospermid) – erinev rakkude koostis ja ehitus</li>
+        <li>Puu ristlõike tsoonid: säsi → lülipuit → maltspuit → kambium → koor</li>
+        <li>Aastarõngas = kevadpuit (hele, suuremad rakud) + sügispuit (tume, paksemad seinad)</li>
+        <li>Okaspuude põhirakk: trahheid (90–95%); lehtpuudel: sooned, libriform, parenhüüm</li>
+      </ul>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-header">
+        <div class="card-icon">💪</div>
+        <h3>II · Puidu tugevus</h3>
+      </div>
+      <ul>
+        <li>Suurim tugevus: tõmbetugevus pikikiudu; survetugevus ≈ 50% tõmbetugevusest</li>
+        <li>Niiskus mõjutab tugevust drastiliselt: märg puit on ≈50% nõrgem kui kuiv</li>
+        <li>Tihedus määrab enamiku mehaanilised omadused (tugevus, kõvadus, kulumiskindlus)</li>
+        <li>Puu kolm põhisuunda: pikikiudu, tangentsiaal, radiaal – omadused eri suundades erinevad</li>
+        <li>Kestustugevus: pikaaegsel koormamisel säilib ainult 60% algtugevusest</li>
+        <li>Kõvadus: Janka testil mõõdetud – tamm 4980 N, saar 6580 N, haab 1650 N</li>
+      </ul>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-header">
+        <div class="card-icon">🪵</div>
+        <h3>V · Materjali klassifikatsioon</h3>
+      </div>
+      <ul>
+        <li>Ümarmaterjal → palk (saematerjali tootmiseks) → saematerjal (lauad, prussid)</li>
+        <li>Nilsoni valem: palgi mahu arvutamine ladvadiameetri ja pikkuse järgi</li>
+        <li>Puidurikked: keerdkasv, oksad, reaktsioonpuit – tekivad kasvu käigus, probleemid kasutamisel</li>
+        <li>Tehispuit: vineer (spoonid ristikihtidena), puitlaastplaat, OSB, puitkiudplaat (MDF/HDF)</li>
+        <li>Saematerjali kuivamisdeformatsioonid sõltuvad lõikepinna suunast puu suhtes</li>
+        <li>Sõrmjätkpuit: lühikeste toorikute ühendamine pikemaks pidevaks detailiks</li>
+      </ul>
+    </div>
+    <div class="summary-card" style="border-top-color:#3a7ca5">
+      <div class="summary-card-header">
+        <div class="card-icon">💧</div>
+        <h3>III · Niiskus puidus</h3>
+      </div>
+      <ul>
+        <li>Absoluutne niiskus: Wabs = (A – B) / B × 100; kasvava puu niiskus kõige madalam septembris, kõrgeim nov–veebr</li>
+        <li>Küllastuspunkt ≈ 30% – rakuseinad on maksimaalselt veega küllastunud; alla selle algab kuivamiskahanemine</li>
+        <li>Seotud niiskus (hügroskoopne, kuni ~30%) vs vaba/kapilaarne niiskus (üle küllastuspunkti)</li>
+        <li>Kuivamiskahanemine: tangentsiaalne : radiaalne : pikisuund = 2 : 1 : 0,1</li>
+        <li>Niiskusklassid: mööblikuiv 6–10%, tislerikuiv 10–15%, hööveldamiskuiv 15–19%</li>
+        <li>Kuivamisdefektid: otslõhed, säsilõhed, honeycomb (tugevalt kuivatamisel); välditav aeglase kuivatuse ja otspindade katmisega</li>
+      </ul>
+    </div>
+    <div class="summary-card" style="border-top-color:#5a8a3c">
+      <div class="summary-card-header">
+        <div class="card-icon">🌲</div>
+        <h3>IV · Puiduliigid</h3>
+      </div>
+      <ul>
+        <li>Eesti metsad: mänd 44%, kask 27%, kuusk 19%, haab 5%, sanglepp 3%</li>
+        <li>Okaspuud: mänd (lülipuiduline), kuusk (küpspuiduline), lehis (lülipuiduline, raske ja kõva)</li>
+        <li>Kõvad lehtpuud: tamm, saar, jalakas – kõik lülipuidulised, rasked, tugevad</li>
+        <li>Pehmed lehtpuud: kask, haab, pärn, vaher, lepp – enamasti maltspuidulised</li>
+        <li>Võõrliigid: pöök, mahagon, tiikpuu, ebenipuu – eri omaduste ja kasutusaladega</li>
+        <li>Tiheduse järgi: kerge (haab ~490 kg/m³) → raske (tamm ~700 kg/m³) → väga raske (ebenipuu 940–1320 kg/m³)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="mantra-box">
+    <h3>⭐ Mantra – puit kui tarbematerjal on…</h3>
+    <div class="mantra-grid">
+      <div class="mantra-item">
+        <strong>Heterogeenne</strong>
+        <span>Materjali erinevatel osadel on erisugused omadused</span>
+      </div>
+      <div class="mantra-item">
+        <strong>Anisotroopne</strong>
+        <span>Füüsikaliste omaduste erinevus eri suundades</span>
+      </div>
+      <div class="mantra-item">
+        <strong>Hügroskoopne</strong>
+        <span>Materjal muudab oma niiskust vastavalt ümbritsevale õhule</span>
+      </div>
+      <div class="mantra-item">
+        <strong>Reoloogne</strong>
+        <span>Pikaajalise välisjõu mõjul muutuvad kuju ja mõõtmed</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= FLASHCARDS ============================= -->
+<section id="flashcards" class="section">
+  <h2 class="section-title"><span class="icon">🃏</span> Flashcard-id</h2>
+  <div class="fc-controls">
+    <div class="fc-progress">Kaart <span id="fc-current">1</span> / <span id="fc-total">16</span></div>
+    <div class="fc-btn-group">
+      <button class="btn btn-secondary" onclick="shuffleCards()">🔀 Sega</button>
+      <button class="btn btn-secondary" onclick="resetCards()">↺ Alusta uuesti</button>
+    </div>
+  </div>
+  <div class="flashcard-container" onclick="flipCard()" id="fc-container">
+    <div class="flashcard" id="fc-card">
+      <div class="fc-face fc-front">
+        <div class="fc-tag" id="fc-tag">Puidu ehitus</div>
+        <div class="fc-question" id="fc-question">Mis on lülipuit ja millised on selle funktsioonid?</div>
+        <div class="fc-hint">Kliki, et näha vastust</div>
+      </div>
+      <div class="fc-face fc-back">
+        <div class="fc-tag">Vastus</div>
+        <div class="fc-answer" id="fc-answer">Lülipuit on tüve sisemises osas asuv puit, mis sisaldab palju ekstraktiivaineid ja on tumedamat värvi. Selle ainus funktsioon on tagada puu seisukindlus. Lülipuidus on rakud suletud ega osale vee transpordis.</div>
+        <div class="fc-hint">Kliki, et näha küsimust</div>
+      </div>
+    </div>
+  </div>
+  <div class="fc-nav">
+    <button class="btn btn-secondary" onclick="prevCard()">← Eelmine</button>
+    <button class="btn btn-primary" onclick="nextCard()">Järgmine →</button>
+  </div>
+  <div class="fc-dots" id="fc-dots"></div>
+</section>
+
+<!-- ============================= VIKTORIIN ============================= -->
+<section id="viktoriin" class="section">
+  <h2 class="section-title"><span class="icon">🎯</span> Viktoriin</h2>
+  <div class="quiz-header">
+    <div class="quiz-info">
+      <div class="quiz-stat"><span class="num" id="q-score">0</span><span class="lbl">Õige</span></div>
+      <div class="quiz-stat"><span class="num" id="q-wrong">0</span><span class="lbl">Vale</span></div>
+      <div class="quiz-stat"><span class="num" id="q-left">52</span><span class="lbl">Järel</span></div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-label">Edusamm</div>
+      <div class="progress-bar"><div class="progress-bar-fill" id="q-progress" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div id="quiz-questions"></div>
+  <div class="quiz-result" id="quiz-result">
+    <div class="result-score" id="result-score">0/10</div>
+    <div class="result-label">vastust</div>
+    <div class="result-msg" id="result-msg"></div>
+    <button class="btn btn-primary" onclick="resetQuiz()" style="margin-top:0.5rem">🔄 Proovi uuesti</button>
+  </div>
+</section>
+
+<!-- ============================= PUIDULIIGID ============================= -->
+<section id="puiduliigid_sec" class="section">
+  <h2 class="section-title"><span class="icon">🌲</span> Puiduliigid</h2>
+
+  <div class="cheat-section">
+    <div class="cheat-header">
+      <h3>🌿 Eesti metsade koosseis ja okaspuud</h3>
+      <span class="cheat-tag">Okaspuud</span>
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-item gold"><strong>Eesti metsade jaotus puuliigiti</strong>Mänd 44% · Kask 27% · Kuusk 19% · Haab 5% · Sanglepp 3% · Teised 2%<br>Eesti pinnast üle 50% on metsaga kaetud.</div>
+      <div class="cheat-item"><strong>Mänd (Pinus sylvestris)</strong><em>Lülipuiduline.</em> Maltspuit kollakasvalge, lülipuit roosakas-pruun. Pehme aga tugev, sirge kiud, vaigust vastupidav. Kasutatakse: ehitus, mööbel, parkett, vineer. Eesti suurimad: 42–43 m, ⌀ 140 cm.</div>
+      <div class="cheat-item"><strong>Kuusk (Picea abies)</strong><em>Küpspuiduline</em> – puit kogu ristlõikes ühtlaselt valge/kollaka varjundiga. Üks pehmemaid okaspuid, vaigusisalduse tõttu püsiv. Kasutatakse: ehitus, mööbel, pillid (orel, klaver, viiul), paber, tsellofaan. Elab 250–500 aastat.</div>
+      <div class="cheat-item highlight"><strong>Lehis (Larix sp.)</strong><em>Lülipuiduline.</em> Lülipuit punakaspruun, maltspuit kitsas ja valge. Märksa raskem ja kõvem kui mänd, väike okste arv, mädanikukindel, säilib hästi vees. Puudus: raske töödeldav, suur kuivamiskahanemine. Kasutatakse: liiprid, sillad, tugipostid.</div>
+    </div>
+  </div>
+
+  <div class="cheat-section">
+    <div class="cheat-header">
+      <h3>🪵 Kõvad lehtpuud</h3>
+      <span class="cheat-tag">Kõvad lehtpuud</span>
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-item highlight"><strong>Harilik tamm (Quercus robur)</strong><em>Lülipuiduline.</em> Lülipuit kollakas-tumepruun, aastarõngad väga selged. Tihedus 690–700 kg/m³, kahanemine 12,6–15,6%, kõvadus 690–715 Janka. Mustaks tamm (vees leotatud) muutub ülikõvaks. Kasutatakse: mööbel, parkett, vaadid, vineer. Kaldkiulisus teeb töötlemise raskeks.</div>
+      <div class="cheat-item"><strong>Harilik saar (Fraxinus excelsior)</strong><em>Lülipuiduline.</em> Maltspuit kollakasvalge, lülipuit hallikaspruun. Tihedus 550–800 kg/m³, kahanemine 8,5–13,6%, kõvadus 400–760 Janka. Sobib suurepäraselt painutamiseks. Kasutatakse: mööbel, parkett, suusad, vineeri. Omapärane lõhn (sisaldab õlisid). Miinus: kolletub, eraldab pilpaid.</div>
+      <div class="cheat-item"><strong>Harilik jalakas (Ulmus glabra)</strong><em>Lülipuiduline.</em> Maltspuit kitsas ja hele, lülipuit punaka- või tumepruun. Säsikiired kitsad, annavad omapärase tekstuuri. Kasvab kuni 40 m, ⌀ 7 m, elab 500 aastat. Sobib painutamiseks, tugev, iseloomulik muster. Miinus: kolletub, aastarõngaste vaheline kõvaduserinevus.</div>
+    </div>
+  </div>
+
+  <div class="cheat-section">
+    <div class="cheat-header">
+      <h3>🍃 Pehmed ja keskmised lehtpuud</h3>
+      <span class="cheat-tag">Lehtpuud</span>
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-item"><strong>Vaher (Acer platanoides)</strong><em>Maltspuiduline.</em> Puit kollakas-punakasvalge. Hinnatud sitkuse, painduvuse ja vastupidavuse tõttu. Kasutatakse: parkett, vineer, mööbel, muusikariistade tootmine. Haruldane – vahtraenamusega puistuid vaid ~20 ha Eestis.</div>
+      <div class="cheat-item"><strong>Kask (Betula sp.)</strong><em>Maltspuiduline.</em> Puit punaka- või kollakasvalge, võrdlemisi raske ja kõva. Aastarõngad ja säsikiired halvasti näha. Puudused: halb töödeldavus (ebakorrapärane ehitus), suur kuivamiskahanemine, väike mädanemiskindlus. Kasutatakse: vineer, mööbel, suusad, hästi poleeritav.</div>
+      <div class="cheat-item"><strong>Haab (Populus tremula)</strong><em>Maltspuiduline.</em> Puit valge, kerge, pehme, hästi lõhestatav. Aastarõnga piirjooned nõrgalt eristuvad. Väga vastuvõtlik seenhaigustele. Kasutatakse: katuselaastud, tiku-, tselluloosi- ja paberitööstus. Puulusikad (ei sisalda vaiku ega anna maitset).</div>
+      <div class="cheat-item"><strong>Pärn (Tilia sp.)</strong><em>Küpspuiduline.</em> Puit pehme, valge/kreemikas. Pole vastupidav mädanikele, kuid kergesti lõhestatav ja töödeldav. Koor (niine) sobib sidumiseks. Kasutatakse: tisleri-, treimis- ja nikerdustöödel. Õied: kvaliteetmesi ja ravimtaim.</div>
+      <div class="cheat-item green"><strong>Sanglepp (Alnus glutinosa)</strong><em>Maltspuiduline.</em> Puit punaka varjundiga, enne langetamist säravvalge → õhu käes muutub kollakaks → oranžiks → roosaks. Kerge, pehme, töödeldav, vees vastupidav. Kasutatakse: vineer, mööbel, muusikariistad, suitsutustootmine.</div>
+      <div class="cheat-item"><strong>Hall lepp (Alnus incana)</strong><em>Maltspuiduline.</em> Sarnane sanglepale, kuid kergem ja läikivam. Sisaldab rohkesti värv- ja parkaineid (lõikepind muutub õhu käes punaseks). Rabe ja kergesti mädanev – ei kõlba tarbematerjaliks. Peamiselt kütteks ja naha parkimiseks.</div>
+    </div>
+  </div>
+
+  <div class="cheat-section">
+    <div class="cheat-header">
+      <h3>🌍 Võõramaised puiduliigid</h3>
+      <span class="cheat-tag">Võõrliigid</span>
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-item highlight"><strong>Harilik pöök (Fagus sylvatica)</strong><em>Küpspuiduline.</em> Ühtlane punakasvalge. Hajulisooneline. Kerge töötleda, aurutades muutub punaseks. Puudus: suur kuivamiskahanemine. Kasutus: mööbel, parkett, mänguasjad, majapidamisesemed, kompvekipulgad.</div>
+      <div class="cheat-item"><strong>Mahagon – Ameerika (Swietenia macrophylla)</strong>Lülipuit roosaka kuni punakaspruun, kuldse läikega. Sirgkiuline, kõva, tihe, suhteliselt stabiilne niiskusmuutustel – deformatsioonid väiksed. Kasutus: mööbel, peentislertööd, pillid, treimis- ja nikerdustööd.</div>
+      <div class="cheat-item highlight"><strong>Tiikpuu (Tectona grandis)</strong><em>Lülipuiduline.</em> Toorelt rohekaskollane, kuivanult mustade triipudega tumepruun. Rasvane läige. Sisaldab räni → ülikulumiskindel, ületab kõik Euroopa puuliigid. Vastupidav mädanikele, putukatele, tule ja hapetele. Kasutus: välistingimused, laevandus, sillad, aiamööbel, välisuksed.</div>
+      <div class="cheat-item gold"><strong>Ebenipuu (Diospyros sp.) – must puu</strong><em>Lülipuiduline.</em> Maltspuit kitsa kollakasvalge, lülipuit must. Tihedus 940–1320 kg/m³ – üks raskemaid puuliike maailmas, äärmiselt kulumiskindel. Aastarõngad pole näha (homogeenne ehitus). Kasutus: muusikariistad, ehted, iluasjad, vineer.</div>
+    </div>
+    <div class="table-wrap" style="margin-top:1rem">
+      <table>
+        <thead><tr><th>Puuliik</th><th>Tüüp</th><th>Tihedus (kg/m³)</th><th>Iseloom</th><th>Peamine kasutus</th></tr></thead>
+        <tbody>
+          <tr><td>Haab</td><td>Maltspuiduline</td><td>~490</td><td>Kerge, pehme, lõhestatav</td><td>Tikud, vineer, tikutööstus</td></tr>
+          <tr><td>Pärn</td><td>Küpspuiduline</td><td>~430</td><td>Pehme, hästi töödeldav</td><td>Nikerdustöö, tislertöö</td></tr>
+          <tr><td>Kuusk</td><td>Küpspuiduline</td><td>~470</td><td>Pehme, vaigusisaldus</td><td>Ehitus, pillid, paber</td></tr>
+          <tr><td>Mänd</td><td>Lülipuiduline</td><td>~530</td><td>Pehme aga tugev, vaigune</td><td>Ehitus, mööbel, parkett</td></tr>
+          <tr><td>Kask</td><td>Maltspuiduline</td><td>~650</td><td>Kõva, halb töödeldavus</td><td>Vineer, mööbel, suusad</td></tr>
+          <tr><td>Tamm</td><td>Lülipuiduline</td><td>~700</td><td>Kõva, raske, püsiv</td><td>Mööbel, vaadid, parkett</td></tr>
+          <tr><td>Saar</td><td>Lülipuiduline</td><td>~720</td><td>Tugev, painduv</td><td>Mööbel, parkett, suusad</td></tr>
+          <tr><td>Lehis</td><td>Lülipuiduline</td><td>~590</td><td>Raske, mädanikukindel</td><td>Liiprid, sillad, postid</td></tr>
+          <tr><td>Tiikpuu</td><td>Lülipuiduline</td><td>~690</td><td>Kulumiskindel, õlirikas</td><td>Välistingimused, laevandus</td></tr>
+          <tr><td>Ebenipuu</td><td>Lülipuiduline</td><td>940–1320</td><td>Üliraske, must</td><td>Pillid, ehted, vineer</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= MEELESPEA ============================= -->
+<section id="meelespea" class="section">
+  <h2 class="section-title"><span class="icon">📌</span> Meelespea</h2>
+
+  <div class="cheat-section">
+    <div class="cheat-header">
+      <h3>🌳 Puidu struktuur – põhimõisted</h3>
+      <span class="cheat-tag">Ehitus</span>
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-item highlight"><strong>Säsi</strong>Tüve keskel, kobe kude; juveniilpuit algab säsist (5–20 esimest aastarõngast, madalakvaliteediline)</div>
+      <div class="cheat-item"><strong>Lülipuit</strong>Tüve sisemises osas, rohkelt ekstraktiivaineid, tume; mõnedel puudel puudub (maltspuidulised: kask, haab) või ei eristu värviliselt (küpspuidulised: kuusk, pärn)</div>
+      <div class="cheat-item green"><strong>Maltspuit</strong>Tüve välimises osas, juhib vett; KÕIKIDEL puuliikidel madal vastupidavus kahjuritele</div>
+      <div class="cheat-item"><strong>Kambium</strong>Õhuke kiht puidu ja koore vahel; poolduvad rakud moodustavad uut puitu ja koort</div>
+      <div class="cheat-item"><strong>Aastarõngas</strong>Kevadpuit (hele, suuremad õhemaseinalised rakud) + sügispuit (tume, väikesed paksemaseinalised rakud)</div>
+      <div class="cheat-item gold"><strong>Keemiline koostis</strong>Tselluloos 40–50% · Hemitselluloos 25–35% · Ligniin 20–30% · Ekstraktiivained kuni 7% (30%)</div>
+    </div>
+  </div>
+
+  <div class="cheat-section">
+    <div class="cheat-header">
+      <h3>💪 Tugevusomadused – kiirviide</h3>
+      <span class="cheat-tag">Tugevus</span>
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-item highlight"><strong>Tõmbetugevus pikikiudu</strong>Suurim tugevus (~100 N/mm²); 15° kiu kõrvalekalle langetab seda 50%!</div>
+      <div class="cheat-item"><strong>Survetugevus pikikiudu</strong>≈50% tõmbetugevusest; kuuse survetugevus ~45 N/mm²</div>
+      <div class="cheat-item green"><strong>Niiskuse mõju</strong>Küllastusniiskuses puit on ~50% nõrgem kui kuiv; iga 1% niiskus mõjutab tugevust</div>
+      <div class="cheat-item gold"><strong>Kestustugevus</strong>Pikaaegsel koormamisel säilib ainult 60% algtugevusest! Tala, mis peab 100 kg, puruneb 85 kg all 10 tunniga</div>
+      <div class="cheat-item"><strong>Kõvadus (Janka N)</strong>Haab 1650 · Kuusk 1680 · Mänd 2420 · Tamm 4980 · Saar 6580 · Ebenpuu 10 790</div>
+      <div class="cheat-item"><strong>Löögisitkus</strong>Niiskem puit = sitkem; lülipuit, ligniin ja madal temperatuur vähendavad sitkust</div>
+    </div>
+    <div class="table-wrap" style="margin-top:1rem">
+      <table>
+        <thead><tr><th>Tugevusliik</th><th>Suhteline tähtsus</th><th>Mõjutavad tegurid</th></tr></thead>
+        <tbody>
+          <tr><td>Tõmbetugevus pikikiudu</td><td>Suurim</td><td>Kiusuund, oksad</td></tr>
+          <tr><td>Survetugevus pikikiudu</td><td>~50% tõmbest</td><td>Ligniin, oksad, keerdkasv</td></tr>
+          <tr><td>Paindetugevus</td><td>Tõmbe ja surve vahel</td><td>I-tala põhimõte, läbiviigud</td></tr>
+          <tr><td>Nihke-/lõiketugevus</td><td>Väiksem</td><td>Puitühenduste arvutamisel oluline</td></tr>
+          <tr><td>Kõvadus</td><td>Tihedusega proportsionaalne</td><td>Janka/Brinell test</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="cheat-section">
+    <div class="cheat-header">
+      <h3>🪵 Materjalid ja klassifikatsioon</h3>
+      <span class="cheat-tag">Klassifikatsioon</span>
+    </div>
+    <div class="formula-box">
+      <strong>Nilsoni valem – palgi mahu arvutamine:</strong>
+      <code>V = (d² · L · (a1 + a2·L) + a3·L²) / 10000</code>
+      d = ladvaotsa diameeter (cm), L = pikkus (dm); a1, a2, a3 puuliigi koefitsiendid
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-item"><strong>Okaspuupalkide mõõdud</strong>Pikkus 3–6 m, 3 dm sammuga; ladvadiameeter 8–50 cm</div>
+      <div class="cheat-item green"><strong>Vineeri põhimõte</strong>Spoonilehed liimitakse nii, et kõrvutiste kihtide süü suund on risti; enamasti paaritu arv kihte</div>
+      <div class="cheat-item highlight"><strong>Puitrikked</strong>Keerdkasv halvendab töötlemis- ja tugevusomadusi; vasakpoolne keerdkasv → suured kuivamisdeformatsioonid</div>
+      <div class="cheat-item gold"><strong>OSB vs puitlaastplaat</strong>OSB: suuremad laastud (1×25×150 mm), orienteeritud; puitlaastplaat: juhuslik orientatsioon</div>
+      <div class="cheat-item"><strong>MDF/HDF</strong>Kuivmeetodiga puitkiudplaat, sideainega; väga hea kujupüsivus, niiskustolerants</div>
+      <div class="cheat-item"><strong>Sõrmjätkpuit</strong>Lühikeste toorikute ühendamine pikemateks; lahendab looduslik pika defektideta materjali nappuse</div>
+    </div>
+  </div>
+
+  <div class="cheat-section">
+    <div class="cheat-header">
+      <h3>💧 Niiskus puidus – kiirviide</h3>
+      <span class="cheat-tag">Niiskus</span>
+    </div>
+    <div class="formula-box">
+      <strong>Absoluutse niiskuse valem:</strong>
+      <code>Wabs = (A – B) / B × 100</code>
+      A = niiske puidu mass (g/kg), B = absoluutkuiva puidu mass (g/kg)
+      <br><br>
+      <strong>Suhteline õhuniiskus:</strong>
+      <code>r = a / a<sub>max</sub> × 100  (%)</code>
+      a = tegelik absoluutne niiskus, a_max = maksimaalne võimalik
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-item highlight"><strong>Küllastuspunkt (~30%)</strong>Piir, millest allpool algab kuivamiskahanemine. Kask/haab: ~35%, männi lülipuit: ~26%. Alla selle hakkavad rakuseinad kokku tõmbuma.</div>
+      <div class="cheat-item"><strong>Seotud vs vaba niiskus</strong>Seotud (hügroskoopne): rakuseintega vesiniksideme abil seotud, eemaldamine nõuab energiat ja põhjustab kahanemist. Vaba (kapilaarne): rakkudevahelistes ruumides, eemaldub ohutult ilma kahanemiseta.</div>
+      <div class="cheat-item highlight"><strong>Kahanemine (suhtarv!)</strong>Tangentsiaalne : Radiaalne : Pikikiudu = <strong>2 : 1 : 0,1</strong><br>Kuivamiskiirus: Tang : Rad : Piki = 1 : 2 : 25</div>
+      <div class="cheat-item gold"><strong>Niiskusklassid kasutuse järgi</strong>Mööblikuiv: 6–10% · Tislerikuiv: 10–15% · Hööveldamiskuiv: 15–19% · Eksportkuiv: 20%<br><em>Eesti kliimas vabaõhus tasakaaluniiskus ≈ 20% – tislerikuivaks ei kuiva õues kunagi!</em></div>
+      <div class="cheat-item green"><strong>Vabaõhukuivatus (okaspuu)</strong>25mm → 1 aasta · 50mm → 3 aastat · 75mm → 4 aastat · 100mm → 5 aastat<br>Rusikareegel: 1 toll aastas + 1 lisaaasta</div>
+      <div class="cheat-item"><strong>Kuivamisdefektid</strong>Otslõhed (otspind kuivab kiiremini) → väldi parafiinvahaga katmisega. Säsilõhed (suurem tangentsiaalkahanemine). Honeycomb (liiga kiire kuivamine → sisemised pinged). Case-hardening (väliskihid tahkuvad enne sisemisi).</div>
+    </div>
+    <div class="table-wrap" style="margin-top:1rem">
+      <table>
+        <thead><tr><th>Niiskuse mõõtmismeetod</th><th>Täpsus</th><th>Omadused</th></tr></thead>
+        <tbody>
+          <tr><td>Kaalumismeetod (100°C, 24h)</td><td>Kõige täpsem</td><td>Aeganõudev; teaduslikel eesmärkidel</td></tr>
+          <tr><td>Elektrilise takistuse mõõtmine</td><td>Täpne</td><td>Kiire; purustav (jätab jälje); saab mõõta eri tsoonide niiskust</td></tr>
+          <tr><td>Elektromagnetlainete levimine</td><td>Täpne</td><td>Kiire; mittepurustav; ei saa mõõta eri kihte eraldi</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</section>
+</main>
+
+<script>
+// ============================= NAVIGATION =============================
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'flashcards') renderDots();
+}
+
+// ============================= FLASHCARDS =============================
+const cards = [
+  { tag:'Puidu ehitus', q:'Mis on lülipuit ja millised on selle funktsioonid?', a:'Lülipuit on tüve sisemises osas asuv, ekstraktiivainerikkas ja tumedamat värvi puit. Selle AINUS funktsioon on tagada puu seisukindlus. Rakud on suletud ega osale vee transpordis.' },
+  { tag:'Puidu ehitus', q:'Mis vahe on maltspuidulistel, lülipuidulistel ja küpspuidulistel puudel?', a:'Maltspuidulised (kask, haab) – lülipuitu ei esine. Lülipuidulised (mänd, tamm) – lülipuit on värviliselt eristuv. Küpspuidulised (kuusk, pärn) – lülipuitu ei saa värviliselt eristada.' },
+  { tag:'Puidu ehitus', q:'Mis on aastarõngas ja millest see koosneb?', a:'Aastarõngas on ühe kasvuperioodi jooksul tekkinud puidu kiht. Koosneb kevadpuidust (hele, suuremad õhukeseseinalised rakud) ja sügispuidust (tume, väikesemad paksemaseinalised rakud).' },
+  { tag:'Puidu ehitus', q:'Millised rakutüübid domineerivad okaspuudes?', a:'Okaspuudes moodustavad 90–95% trahheid-rakud, mis täidavad nii juht- kui tugikoe ülesannet. Ülejäänud 5–10% on säsikiirte parenhüümrakud.' },
+  { tag:'Puidu ehitus', q:'Mis on kambium ja mis on selle roll?', a:'Kambium (mähk/lateraalne meristeem) on õhuke, mõne raku paksune kiht puidu ja koore vahel. Kasvuperioodil pooldub, moodustades sissepoole uusi puidurakke ja väljapoole uusi koorerakke.' },
+  { tag:'Puidu keemia', q:'Mis on puidu kolm põhilist keemilist ühendit ja nende osakaal?', a:'Tselluloos 40–50% (annab tugevuse), Hemitselluloos 25–35% (täidematerjal fibrillide vahel), Ligniin 20–30% (liimimaterjal, annab jäikuse). Neile lisanduvad ekstraktiivained kuni 7%.' },
+  { tag:'Puidu tugevus', q:'Mis on puidu suurim tugevus ja mitu korda see ületab survetugevust?', a:'Suurim on tõmbetugevus pikikiudu (~100 N/mm²). Survetugevus pikikiudu on sellest ca 50% väiksem (~50 N/mm²). Kiusuuna muutumisel 15° võrra langeb tõmbetugevus ca 50%.' },
+  { tag:'Puidu tugevus', q:'Kuidas mõjutab niiskus puidu tugevust?', a:'Märg puit (küllastusniiskuses) on ca 50% nõrgem kui kuiv puit. Vee molekulid difundeeruvad puidu sisse ja nõrgestavad polümeer-polümeer sidemed.' },
+  { tag:'Puidu tugevus', q:'Mis on kestustugevus ja miks see on oluline?', a:'Pikaaegsel koormamisel säilib puidul ainult 60% algmomendi tugevusest. Näide: tala, mis kannatab hetkeliselt 100 kg, puruneb 85 kg all 10 tunni jooksul ja 62 kg all 10 aasta jooksul.' },
+  { tag:'Puidu tugevus', q:'Milline on puidu kõvadus Janka skaalal? Too 3 näidet.', a:'Harilik haab 1650 N · Harilik mänd 2420 N · Harilik tamm 4980 N · Harilik saar 6580 N · Must ebenipuu 10 790 N. Pikikiudu on kõvadus peaaegu 2× suurem kui ristikiudu.' },
+  { tag:'Klassifikatsioon', q:'Mis on Nilsoni valem ja milleks seda kasutatakse?', a:'Nilsoni valem arvutab palgi ruumala ladvadiameetri (cm) ja pikkuse (dm) järgi. V = (d²·L·(a1+a2·L) + a3·L²)/10000. Koefitsiendid a1, a2, a3 on puuliigiti erinevad.' },
+  { tag:'Klassifikatsioon', q:'Mis on vineer ja kuidas see erineb tavalisest puidust?', a:'Vineer on tehispuit, kus spoonilehed liimitakse kokku nii, et kõrvuti asetsevate kihtide süüsuund on risti. Tavaliselt paaritu arv kihte. Annab ühtlasemad omadused ja vähendab anisotroopsust.' },
+  { tag:'Klassifikatsioon', q:'Mis vahe on OSB-plaadil ja puitlaastplaadil?', a:'Puitlaastplaat: laastud (0,5 mm × 3–15 mm × 20–50 mm) juhuslikult orienteeritud. OSB (oriented strand board): suuremad laastud (~1×25×150 mm), väliskihid piki-, sisekihid ristipidi – parem tugevus.' },
+  { tag:'Klassifikatsioon', q:'Mis on keerdkasv ja miks see on probleem?', a:'Keerdkasv ehk tangentsiaalne kaldkiulisus esineb kõikidel puuliikidel. Halvendab töötlemis- ja tugevusomadusi. Vasakpoolne keerdkasv põhjustab suuri kuivamisdeformatsioone – puit "lahti keerdub" kuivatamisel.' },
+  { tag:'Puidu ehitus', q:'Mis on säsi ja mis on juveniilpuit?', a:'Säsi on tüve keskel olev kobe kude, läbimõõt 2–10 mm. Juveniilpuit on 5–20 esimest aastarõngast, madalakvaliteediline – rakud lühikesed, õhukeseseinalised, suure ligniinisisaldusega.' },
+  { tag:'Puidu tugevus', q:'Mis on löögisitkus ja millised tegurid seda mõjutavad?', a:'Löögisitkus on löökpaindekatses purunemiseks vajalik minimaalne töö. Niiskemat puit on sitkem. Sitkust vähendavad: suurem tihedus, lülipuit, ligniin, madal temperatuur, mädanik, aeglane kasv.' },
+  { tag:'Niiskus puidus', q:'Mis on puidu küllastuspunkt ja mis juhtub, kui niiskus langeb alla selle?', a:'Küllastuspunkt on niiskustase (~30%), milleni rakuseinad suudavad hügroskoopselt vett siduda. Alla selle algab kuivamiskahanemine – rakuseinad tõmbuvad kokku. Vaba (kapilaarne) niiskus eemaldub ohutult, seotud niiskuse eemaldamine põhjustab kahanemist.' },
+  { tag:'Niiskus puidus', q:'Mis on absoluutne niiskus ja kuidas seda arvutatakse?', a:'Absoluutne niiskus näitab vee kogust 100 osa absoluutselt kuiva puidu kohta. Valem: Wabs = (A – B) / B × 100, kus A = niiske puidu mass, B = absoluutkuiva puidu mass. Näiteks: 110 kg niiskes puidus on 100 kg puitu + 10 kg vett → niiskus 10%.' },
+  { tag:'Niiskus puidus', q:'Mis on kuivamiskahanemine eri suundades ja milline suhe nende vahel on?', a:'Kuivamiskahanemine on anisotroopne: tangentsiaalne : radiaalne : pikisuund = 2 : 1 : 0,1. See tähendab, et puit kahaneb tangentsiaalselt kõige rohkem (kuni ~8%), radiaalselt poole vähem (~4%) ja pikisuunas peaaegu üldse mitte (~0,4%). See põhjustab laua kõmmeldumist.' },
+  { tag:'Niiskus puidus', q:'Millised on peamised niiskusklassid ja milleks neid kasutatakse?', a:'Mööblikuiv 6–10%: mööbel, sisustus, parkett. Tislerikuiv 10–15%: uksed, aknad. Hööveldamiskuiv 15–19%: pindade töötlemine. Eksportkuiv 20%. Eesti kliimas on vabaõhukuivatus max ~20% – tislerikuivaks ei muutu puit õues ka 100 aastaga!' },
+  { tag:'Niiskus puidus', q:'Mis on kuivamisdefektid ja kuidas tekivad otslõhed?', a:'Otslõhed tekivad, sest puidu otspind kuivab kiiremini kui sisemised kihid. Välimised kihid kahanevad, sisemised hoiavad mahu → tekivad tõmbepinged ja lõhed (enamasti säsikiirte juurde). Välditav otspindade katmisega parafiinvahaga.' },
+  { tag:'Niiskus puidus', q:'Kuidas erineb vabaõhukuivamise kiirus saematerjali paksuse järgi?', a:'Okaspuud rusikareegel – 1 toll aastas + üks lisaaasta. Praktikas: 25mm (1") → 1 aasta, 50mm (2") → 3 aastat, 75mm (3") → 4 aastat, 100mm (4") → 5 aastat. Eesti kliimas on vabaõhus tasakaaluniiskus ca 20%.' },
+];
+
+let currentCard = 0;
+let flipped = false;
+let cardOrder = [...Array(cards.length).keys()];
+
+function renderCard() {
+  const c = cards[cardOrder[currentCard]];
+  document.getElementById('fc-tag').textContent = c.tag;
+  document.getElementById('fc-question').textContent = c.q;
+  document.getElementById('fc-answer').textContent = c.a;
+  document.getElementById('fc-current').textContent = currentCard + 1;
+  document.getElementById('fc-total').textContent = cards.length;
+  document.getElementById('fc-card').classList.remove('flipped');
+  flipped = false;
+  renderDots();
+}
+function renderDots() {
+  const d = document.getElementById('fc-dots');
+  if (!d) return;
+  d.innerHTML = cards.map((_,i) =>
+    `<div class="fc-dot ${i===currentCard?'active':''}"></div>`
+  ).join('');
+}
+function flipCard() {
+  flipped = !flipped;
+  document.getElementById('fc-card').classList.toggle('flipped', flipped);
+}
+function nextCard() {
+  currentCard = (currentCard + 1) % cards.length;
+  renderCard();
+}
+function prevCard() {
+  currentCard = (currentCard - 1 + cards.length) % cards.length;
+  renderCard();
+}
+function shuffleCards() {
+  for (let i = cardOrder.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [cardOrder[i], cardOrder[j]] = [cardOrder[j], cardOrder[i]];
+  }
+  currentCard = 0;
+  renderCard();
+}
+function resetCards() {
+  cardOrder = [...Array(cards.length).keys()];
+  currentCard = 0;
+  renderCard();
+}
+renderCard();
+
+// ============================= QUIZ =============================
+const questions = [
+  // === PUIDU EHITUS ===
+  {
+    q: 'Mis on botaaniline definitsioon puidust?',
+    opts: ['Puude tüvede väliskoor','Seemnetaimede kambiumi moodustatud sekundaarne ksüleem','Kõigi taimede lignifitseerunud kude','Puude ja põõsaste kogu tüvi koos koorega'],
+    correct: 1,
+    fb: 'Kitsamas botaanilises mõttes on puit seemnetaimede kambiumi moodustatud sekundaarne ksüleem. Laiemas mõttes tähendab puit lignifitseerunud (puitunud) taimekude üldiselt.'
+  },
+  {
+    q: 'Mis on puidu "mantra" – neli põhiomadust tarbematerjalina?',
+    opts: ['Kõva, kerge, vastupidav, ilus','Heterogeenne, anisotroopne, hügroskoopne, reoloogne','Tugev, elastne, kerge, tihe','Keemiline, mehaaniline, termiline, akustiline'],
+    correct: 1,
+    fb: 'Puit kui tarbematerjal on heterogeenne (erinevate osade omadused erinevad), anisotroopne (omadused eri suundades erinevad), hügroskoopne (imab niiskust), reoloogne (kuju muutub pikaajalise koormuse all). Oluline mantra!'
+  },
+  {
+    q: 'Milline on puidu keemiline koostis – põhiühendite osakaalud?',
+    opts: ['Tselluloos 70%, ligniin 20%, hemitselluloos 10%','Tselluloos 40–50%, hemitselluloos 25–35%, ligniin 20–30%','Ligniin 50%, tselluloos 30%, hemitselluloos 20%','Tselluloos 60%, ligniin 30%, ekstraktiivained 10%'],
+    correct: 1,
+    fb: 'Puidu kolm põhiühendit: tselluloos 40–50% (tugevus), hemitselluloos 25–35% (täidematerjal), ligniin 20–30% (jäikus, liimimaterjal). Lisaks ekstraktiivained kuni 7% ja mineraalühendid kuni 2%.'
+  },
+  {
+    q: 'Milline on okaspuude põhirakutüüp ja mitu protsenti moodustavad need puidust?',
+    opts: ['Libriform, 80–90%','Trahheid-rakud, 90–95%','Parenhüümrakud, 70%','Sooned (trahhed), 85%'],
+    correct: 1,
+    fb: 'Okaspuudes domineerivad trahheid-rakud (90–95%), mis täidavad nii juht- kui tugikoe ülesannet. Trahheidi pikkus on 3–4 mm kuusel, 2–3 mm männil. Ülejäänud 5–10% on säsikiirte parenhüümrakud.'
+  },
+  {
+    q: 'Mis vahe on lülipuidulistel, küpspuidulistel ja maltspuidulistel puudel?',
+    opts: ['Vahe on puidu tiheduses: lülipuiduline on tihedaim','Lülipuiduline (mänd, tamm): eristuv tume lülipuit; küpspuiduline (kuusk, pärn): lülipuitu ei erista värviliselt; maltspuiduline (kask, haab): lülipuitu pole','Vahe on ainult aastarõngaste arvus','Eristus põhineb ainult puidu kõvadusel'],
+    correct: 1,
+    fb: 'Lülipuidulised (mänd, tamm): lülipuit on värviliselt eristuv ja sisaldab rohkelt ekstraktiivaineid. Küpspuidulised (kuusk, pärn): lülipuitu pole värviliselt eristada. Maltspuidulised (kask, haab): lülipuitu üldse ei esine.'
+  },
+  {
+    q: 'Mis on kambium ja kus see asub?',
+    opts: ['Puu väliskoor, mis kaitseb tüve','Õhuke rakkude pooldumise kiht puidu ja koore vahel','Männi ja kuuse vaigukanalite koond','Säsikiirte moodustav põhikude'],
+    correct: 1,
+    fb: 'Kambium (mähk / lateraalne meristeem) on õhuke, mõne raku paksune kiht, mis asub puidu ja koore vahel. Kasvuperioodil pooldub, moodustades sissepoole uusi puidurakke ja väljapoole uusi koorerakke.'
+  },
+  {
+    q: 'Milles erinevad kevadpuit ja sügispuit?',
+    opts: ['Kevadpuit on tumedam ja tihedam, sügispuit heledam','Kevadpuit on heledam ja suuremad õhukeseseinalised rakud; sügispuit tumedam, väiksemad paksemaseinalised rakud','Kevadpuit tekib sügisperioodil, sügispuit kevadel','Nende vahel pole visuaalset erinevust'],
+    correct: 1,
+    fb: 'Kevadel tekivad suuremad, õhukeseseinalised rakud → kevadpuit on hele ja väiksema tihedusega. Sügispoole kasvades tekivad väiksemad, paksemaseinalised rakud → sügispuit on tume ja suurema tihedusega. Koos moodustavad nad ühe aastarõnga.'
+  },
+  {
+    q: 'Mis on lülipuidu ainus funktsioon täiskasvanud puu jaoks?',
+    opts: ['Vee transport juurtest võrani','Toitainete ladustamine','Puu seisukindluse tagamine','Fotosünteesiks vajalike ainete tootmine'],
+    correct: 2,
+    fb: 'Lülipuidus asuvate rakkude koobaspoorid on suletud, juhtsooned tüloosidega ummistunud – rakud ei osale vee transpordis ega toitainete ladustamises. Lülipuidu ainus funktsioon on tagada puu seisukindlus (mehhaaniline tugi).'
+  },
+  {
+    q: 'Mille poolest erineb juveniilpuit ülejäänud puidust?',
+    opts: ['Juveniilpuit on tugevam ja tihedam','Juveniilpuit (5–20 esimest aastarõngast) on madalakvaliteediline – rakud lühikesed, õhukeseseinalised, suur ligniinisisaldus, laiad aastarõngad, vähe sügispuitu','Juveniilpuit asub tüve välimises osas','Juveniilpuidu ja täiskasvanud puidu vahel pole tehnilist erinevust'],
+    correct: 1,
+    fb: 'Juveniilpuit on 5–20 esimest aastarõngast säsi ümber. Madalakvaliteediline: rakud lühikesed ja õhukeseseinalised, suur ligniinisisaldus, laiad aastarõngad, vähe sügispuitu (okaspuudel). Mikrofibrillide nurk on suurem → nõrgem puit.'
+  },
+  {
+    q: 'Miks on kõikide puuliikide maltspuidu vastupidavus kahjuritele madal?',
+    opts: ['Sest maltspuit on liiga tihe','Sest maltspuit ei sisalda kaitsevaid ekstraktiivaineid','Sest maltspuit on alati liiga niiske','Sest maltspuidu rakud on liiga suured'],
+    correct: 1,
+    fb: 'Maltspuit juhib vett ja toitaineid – seetõttu on see rakkudele ja seentele toitainerikas kasvukeskkond. Lülipuidu kaitsev roll tuleneb just ekstraktiivainete kontsentratsioonist. Seega kõikide puuliikide maltspuit on kahjuritele vastuvõtlik.'
+  },
+  {
+    q: 'Mitu miljardit rakku on ühes kuupmeetris puidus ligikaudu?',
+    opts: ['1–10 miljardit','50–100 miljardit','350–500 miljardit','Üle 1 triljoni'],
+    correct: 2,
+    fb: 'Ühes kuupmeetris puidus on 350–500 miljardit rakku. Neist elusad on ainult parenhüümrakud: okaspuudes ca 7%, parasvöötme lehtpuudes ca 21%, troopilistes lehtpuudes ca 36%. Juht- ja tugirakkude eluiga on vaid nädalaid.'
+  },
+
+  // === PUIDU TUGEVUS ===
+  {
+    q: 'Mis on puidu suurim tugevus ja mitu korda ületab see survetugevust?',
+    opts: ['Nihketugevus, 3× suurem','Tõmbetugevus pikikiudu, ~2× suurem kui survetugevus','Paindetugevus, 4× suurem','Kõvadus, 2× suurem'],
+    correct: 1,
+    fb: 'Puidu suurim tugevus on tõmbetugevus pikikiudu (~100 N/mm²). Survetugevus pikikiudu on ~45–50 N/mm² – ca 2× väiksem. Tselluloosikiu tõmbetugevus on koguni 1000 N/mm² – hea terase tasemel!'
+  },
+  {
+    q: 'Kuidas mõjutab niiskus puidu tugevust?',
+    opts: ['Niiskus ei mõjuta tugevust oluliselt','Märg puit (küllastusniiskuses) on ca 50% nõrgem kui kuiv puit','Niiskus suurendab tugevust 20% võrra','Niiskus mõjutab ainult kõvadust, mitte tugevust'],
+    correct: 1,
+    fb: 'Küllastusniiskuses puit on ca 50% nõrgem kui kuiv puit. Vee molekulid difundeeruvad puidu sisse ja nõrgestavad polümeer-polümeer sidemeid. Iga niiskusprotsent küllastuspunkti all muudab tugevust märgatavalt.'
+  },
+  {
+    q: 'Mis juhtub puidu tõmbetugevusega, kui kiu suund muutub 15° võrra?',
+    opts: ['Tugevus langeb umbes 10%','Tugevus suureneb 15%','Tugevus langeb ca 50%','Kiusuund ei mõjuta tõmbetugevust'],
+    correct: 2,
+    fb: 'Juba 15-kraadine kõrvalekalle kiu pikisuunast langetab tõmbetugevuse ca 50%! See on üks põhjus, miks keerdkasv ja kaldkiulisus on konstruktsioonipuidu jaoks nii probleemne.'
+  },
+  {
+    q: 'Mis on kestustugevus ja mitu protsenti algtugevusest säilib?',
+    opts: ['100% – pikaajaline koormus ei mõjuta','75% – mõningane nõrgenemine','60% – pikaajaline koormus jätab alles vaid 60%','40% – puit nõrgeneb tugevalt'],
+    correct: 2,
+    fb: 'Kestustugevus: pikaaegsel koormamisel säilib puidul ainult 60% algmomendi tugevusest! Näide: tala, mis kannatab hetkeliselt 100 kg, puruneb 85 kg all 10 tunni jooksul, 73 kg all 45 päeva ja 62 kg all 10 aasta jooksul.'
+  },
+  {
+    q: 'Milline on survetugevuse suhe pikikiudu vs ristikiudu?',
+    opts: ['Pikikiudu on ca 2× suurem','Pikikiudu on 5–6× suurem kui ristikiudu','Ristikiudu on suurem','Suhe on ligikaudu 1:1'],
+    correct: 1,
+    fb: 'Survetugevus ristikiudu on 5–6 korda väiksem kui pikikiudu. Kuuse survetugevus pikikiudu on ca 45 N/mm². Praktiliselt: postideks sobivad ka okslikud ja keerdkasvuga palgid, kuid taladeks mitte.'
+  },
+  {
+    q: 'Milline on tamme kõvadus Janka testil ja kus on mänd selles skaalas?',
+    opts: ['Tamm 2420 N, mänd 4980 N','Tamm 4980 N, mänd 2420 N','Tamm 6580 N, mänd 4980 N','Tamm 1680 N, mänd 2420 N'],
+    correct: 1,
+    fb: 'Janka skaala: Haab 1650 N · Kuusk 1680 N · Mänd 2420 N · Tamm 4980 N · Saar 6580 N · Ebenipuu 10 790 N · Guajakipuu 19 510 N. Tamm on ca 2× kõvem kui mänd.'
+  },
+  {
+    q: 'Mis on paindetugevus füüsikalises mõttes?',
+    opts: ['Sama mis tõmbetugevus – ainult erinev koormuse suund','Kombinatsioon tõmbe-, surve- ja nihketugevusest; jääb väärtuselt tõmbe- ja survetugevuse vahele','Suurim kõikidest tugevusliikidest','Ainult nihketugevuse erijuht'],
+    correct: 1,
+    fb: 'Paindetugevus on kombinatsioon: tala ülaosas tekivad survepinged, alaosas tõmbepinged, neutraalses tsoonis nihkepinged. Seetõttu jääb paindetugevus väärtuselt tõmbe- ja survetugevuse vahele.'
+  },
+  {
+    q: 'Mida tähendab puidu väsimus?',
+    opts: ['Puit nõrgeneb vanusega automaatselt','Korduvad tsüklilised pinged põhjustavad purunemise madalamal pingetasemel; väsimuspiir võib saabuda juba 30% tasemel algtugevusest','Puit kaotab tugevuse liigse kuivatamise tõttu','Väsimus on ainult metallidele omane nähtus'],
+    correct: 1,
+    fb: 'Väsimus: korduvad tsüklilised pinged (vibratsioon, vahelduvkoormused) põhjustavad purunemise madalama pinge all kui normaalkoormamisel. Deformatsioonid pole märgatavad. Väsimuspiir võib saabuda juba 30% tasemel algtugevusest!'
+  },
+  {
+    q: 'Millises suunas on puidu lõhestamine võimalik ja kummas suunas on see lihtsam?',
+    opts: ['Lõhestamine on võimalik nii piki- kui ristikiudu; lihtsam on ristikiudu','Lõhestamine on võimalik ainult pikikiudu; radiaalselt on 2–3× lihtsam kui tangentsiaalselt','Lõhestamine on võimalik ainult tangentsiaalselt','Kõikides suundades on lõhestamine võrdne'],
+    correct: 1,
+    fb: 'Puidu lõhestamine on võimalik AINULT pikikiudu. Radiaalselt on lõhestamine 2–3× lihtsam kui tangentsiaalselt – säsikiired toimivad nõrkade kohtadena.'
+  },
+  {
+    q: 'Kuidas mõjutab kasvukiirus okaspuu kvaliteeti?',
+    opts: ['Alati: kiiremini kasvanud puit on parem','Aeglaselt kasvanud tihedate aastarõngastega okaspuu on enamasti paremate mehaaniliste omadustega – v.a. näljapuit nt rabamändidel','Kasvukiirus ei mõjuta okaspuu kvaliteeti üldse','Kiiresti kasvanud puit on alati parem'],
+    correct: 1,
+    fb: 'Okaspuudel on aeglaselt kasvanud, tihedate aastarõngastega puit enamasti paremate mehaaniliste omadustega. Erand: kehvades kasvukohtades tekib "näljapuit" (nt rabamänd) – toitaineid vähe, lühike kasvuperiood → kerge ja nõrk puit.'
+  },
+  {
+    q: 'Mitu korda on puidu lõikamine otspinnalt (A) raskusem kui pikikiudu (B)?',
+    opts: ['Sama raske','Umbes 1,5× raskem','Umbes 2,6× raskem','Umbes 5× raskem'],
+    correct: 2,
+    fb: 'Otspinna lõikamine nõuab ca 2,6× suuremat jõudu kui pikikiudu lõikamine ning ca 4,5× suuremat jõudu kui ristikiudu lõikamine. Seega on puidu töötlemine otspinnalt oluliselt raskem.'
+  },
+
+  // === MATERJALI KLASSIFIKATSIOON ===
+  {
+    q: 'Mis on Nilsoni valem ja mida sellega arvutatakse?',
+    opts: ['Puidu tugevuse arvutamiseks','Palgi ruumala arvutamiseks ladvadiameetri (cm) ja pikkuse (dm) järgi','Puidu niiskuse arvutamiseks','Saematerjali kuivamisdeformatsioonide arvutamiseks'],
+    correct: 1,
+    fb: 'Nilsoni valem: V = (d²·L·(a1+a2·L) + a3·L²)/10000. d = ladvadiameeter (cm), L = pikkus (dm). NB! Erinevad mõõtühikud! Koefitsiendid a1, a2, a3 sõltuvad puuliigist (mänd, kuusk, kask on erinevad).'
+  },
+  {
+    q: 'Millised on okaspuupalkide arvestuslikud pikkused Eestis?',
+    opts: ['2–4 m, 50 cm sammuga','3–6 m, 3 dm (30 cm) sammuga','1–5 m, 1 m sammuga','4–8 m, 50 cm sammuga'],
+    correct: 1,
+    fb: 'Okaspuupalkide arvestuslik pikkus algab 3 meetrist (30 dm) ja kasvab 3 dm sammuga kuni 6 meetrini: 3,0 · 3,3 · 3,6 · 3,9 m jne. Samade mõõtudega on ka palkidest toodetav saematerjal. Pikemat materjali varutakse eritellimuse alusel.'
+  },
+  {
+    q: 'Mis on vineer ja mis on selle peamine struktuurne eelis?',
+    opts: ['Vineer on lihtsalt õhuke puiduleht','Vineer on tehispuit – spoonilehed liimitakse kihiti ristipidi (enamasti paaritu arv kihte), mis vähendab anisotroopsust ja ühtlustab tugevust','Vineer on ainult dekoratiivne materjal','Vineeri kiud jooksevad kõikides kihtides samas suunas'],
+    correct: 1,
+    fb: 'Vineeri puhul liimitakse spoonilehed nii, et kõrvuti kihtide süüsuund on risti. Enamasti paaritu arv kihte. See vähendab anisotroopsust ja ühtlustab mehaanilisi omadusi igas suunas. Eesti on olnud vineeritootmise Euroopa pioneer juba 19. saj lõpust.'
+  },
+  {
+    q: 'Mis vahe on OSB-plaadil ja tavalisel puitlaastplaadil?',
+    opts: ['OSB on tugevam, sest selles on rohkem liimi','OSB: suuremad laastud (~1×25×150 mm), orienteeritud kihiti; puitlaastplaat: väiksemad juhuslikult orienteeritud laastud','OSB ja puitlaastplaat on identsed tooted','Puitlaastplaadis on rohkem liimi kui OSBs'],
+    correct: 1,
+    fb: 'OSB (oriented strand board): suuremad laastud (~1×25×150 mm), sihipäraselt orienteeritud – väliskihid pikikiudu, sisekihid risti → parem struktuuriline tugevus. Puitlaastplaat: väiksemad laastud (0,5×3–15×20–50 mm), juhuslik orientatsioon.'
+  },
+  {
+    q: 'Mis on MDF ja miks on selle kujupüsivus hea?',
+    opts: ['Medium Density Fiberboard; hea kujupüsivus, sest kiud on pikad','Medium Density Fiberboard; toodetakse kuivmeetodil sideainega; niiskusmuutusel 35–85% on paksuse mahumuutus vaid 2,5% ja pikkuse/laiuse muutus 0,25%','Machine Dried Fiberboard; kuivatamise käigus saavutatakse stabiilsus','Multi-layer Density Framework; kihiline struktuur tagab stabiilsuse'],
+    correct: 1,
+    fb: 'MDF = Medium Density Fiberboard. Toodetakse kuivmeetodil sideainega (alates 1960ndatest). Väga hea kujupüsivus: niiskusmuutusel 35–85% on paksuse mahumuutus 2,5% ja pikkuse/laiuse muutus ainult 0,25%!'
+  },
+  {
+    q: 'Miks on keerdkasv konstruktsioonipuidu jaoks problemaatiline?',
+    opts: ['Keerdkasv muudab puidu värvuse','Halvendab töötlemis- ja tugevusomadusi; vasakpoolne keerdkasv põhjustab suuri kuivamisdeformatsioone – puit "lahti keerdub"','Keerdkasv esineb ainult väga vanadel puudel','Mõjutab ainult värvust, mitte tugevust'],
+    correct: 1,
+    fb: 'Keerdkasv ehk tangentsiaalne kaldkiulisus esineb kõikidel puuliikidel. Halvendab töötlemis- ja tugevusomadusi. Eriti probleemne on vasakpoolne keerdkasv – kuivades "keerdub lahti", põhjustab suuri deformatsioone, välditud palk- ja vahvärk-ehituses.'
+  },
+  {
+    q: 'Mis on sõrmjätkpuit ja milleks seda kasutatakse?',
+    opts: ['Sõrmedega töödeldud eripuit','Lühikeste toorikute ühendamine sõrmühendusega pikemate detailide saamiseks','Spoon, mida kasutatakse sõrmkindade tootmiseks','Eriliik pärnapuitu'],
+    correct: 1,
+    fb: 'Sõrmjätkpuit ühendab lühikesed toorikud sõrmühenduse abil pikemateks detailideks. See lahendab looduslikult pika defektideta materjali nappuse probleemi ja võimaldab kasutada puidutööstuse jääke efektiivselt.'
+  },
+  {
+    q: 'Kuidas klassifitseeritakse põhjamaist saematerjali aastarõngaste järgi?',
+    opts: ['Nõue puudub, tihedust ei arvestata','Minimaalselt 10 aastarõngast 25 mm kohta','Minimaalselt 5 aastarõngast 10 mm kohta','Maksimum 3 aastarõngast 25 mm kohta'],
+    correct: 1,
+    fb: 'Põhjamaist saematerjali iseloomustab tihe struktuur: minimaalselt 10 aastarõngast 25 mm kohta. Männil optimaalne aastarõnga laius 1,5–2 mm, kuusel 1–1,5 mm. Tänapäeval palkide kvaliteedi määramisel aastarõngaste laiust tavaliselt siiski ei arvestata.'
+  },
+  {
+    q: 'Mis on saematerjali kuivamiskahanemine ja kuidas see deformatsioone põhjustab?',
+    opts: ['Puit kahaneb ühtlaselt kõikides suundades','Kuna tangentsiaalkahanemine on 2× suurem kui radiaalkahanemine, kõmmelduv laud "keerab" aastarõngaste suunas; tangentsiaallõikusega laud kõmmeldub kõige rohkem','Kahanemine toimub ainult pikisuunas','Deformatsioonid tekivad ainult väga kiire kuivatamise puhul'],
+    correct: 1,
+    fb: 'Tangentsiaalkahanemine (2×) > radiaalkahanemine (1×) → laud kõmmeldub, keerab aastarõngaste suunas. Tangentsiaallõikusega laud (aastarõngad lõike ristisuunas) kõmmeldub kõige rohkem. Radiaallõikusega laud on stabiilsem, kuid raiskavam materjali kasutuselt.'
+  },
+
+  // === NIISKUS PUIDUS ===
+  {
+    q: 'Mis on puidu absoluutne niiskus ja kuidas seda arvutatakse?',
+    opts: ['Niiskuse hulk niiske puidu suhtes (%)','Vee hulk absoluutselt kuiva puidu suhtes: Wabs = (A–B)/B×100; 110 kg niiske puit = 100 kg puitu + 10 kg vett → niiskus 10%','Niiskus mõõdetuna kuupmeetrites','Sama, mis suhteline õhuniiskus'],
+    correct: 1,
+    fb: 'Absoluutne niiskus näitab vee kogust 100 osa kuiva puidu kohta: Wabs = (A – B) / B × 100, kus A = niiske mass, B = absoluutkuiv mass. Absoluutne niiskus võib ulatuda üle 300% (nt männi maltspuit kasvava puu juures 145%)!'
+  },
+  {
+    q: 'Mis on puidu küllastuspunkt ja mida see tähistab?',
+    opts: ['Niiskustase, mil puit hakkab mädanema','Niiskustase (~30%), milleni rakuseinad seovad hügroskoopselt vett; alla selle algab kuivamiskahanemine','Punkt, mil puit ei suuda enam niiskust vastu võtta','Niiskustase, mil puidu tugevus on maksimaalne'],
+    correct: 1,
+    fb: 'Küllastuspunkt on ~30% niiskustaset, milleni rakuseinad suudavad vesiniksideme abil tselluloosimolekulidega vett siduda. Alla selle algab kuivamiskahanemine. Küllastuspunkt varieerub: kasepuu 35%, männi lülipuit 26%, männi maltspuit 30%.'
+  },
+  {
+    q: 'Mis vahe on seotud ja vabal (kapilaarsel) niiskusel?',
+    opts: ['Nende vahel pole praktilist erinevust','Seotud niiskus (alla küllastuspunkti): tselluloosiga seotud vesiniksideme abil, eemaldamine põhjustab kahanemist. Vaba niiskus (üle küllastuspunkti): rakkudevahelistes ruumides, eemaldub ilma kahanemiseta','Vaba niiskus on kahjulikum kui seotud','Seotud niiskus on ainult lülipuidus'],
+    correct: 1,
+    fb: 'Vaba (kapilaarne) niiskus asub rakkude vahel ja rakuõõnsustes. Eemaldub kergesti nagu "ämbri tühjaks kallamine" – kuju ei muutu. Seotud niiskus on keemiliselt seotud tselluloosiga – eemaldamiseks tuleb keemiline side lõhkuda, mis põhjustab kahanemist.'
+  },
+  {
+    q: 'Milline on kuivamiskahanemine eri suundades (suhted)?',
+    opts: ['Tangentsiaalne : radiaalne : pikikiudu = 1 : 2 : 10','Tangentsiaalne : radiaalne : pikikiudu = 2 : 1 : 0,1','Kõikides suundades on kahanemine võrdne (1:1:1)','Radiaalne : tangentsiaalne : pikikiudu = 2 : 1 : 0,5'],
+    correct: 1,
+    fb: 'Kuivamiskahanemine on selgelt anisotroopne – suhe 2:1:0,1. Tangentsiaalselt (piki aastarõngaid) kahanes kõige rohkem (~8%), radiaalselt (säsist koore suunas) poole vähem (~4%), pikisuunas peaaegu mitte (~0,4%). See põhjustab laudade kõmmeldumist!'
+  },
+  {
+    q: 'Millised on peamised niiskusklassid kasutuse järgi?',
+    opts: ['Ehituskuiv 5%, väliskuiv 25%, veekindel 50%','Mööblikuiv 6–10%, tislerikuiv 10–15%, hööveldamiskuiv 15–19%, eksportkuiv 20%','Toorkuiv 30%, kuivatuskuiv 15%, absoluutkuiv 0%','Siseruumi 12%, välisruumi 18%, konstruktsioon 25%'],
+    correct: 1,
+    fb: 'Niiskusklassid kasutuse järgi: Mööblikuiv 6–10% (mööbel, parkett, sisustus). Tislerikuiv 10–15% (uksed, aknad). Hööveldamiskuiv 15–19%. Eksportkuiv 20%. Eesti kliimas on vabaõhus tasakaaluniiskus ca 20% – tislerikuivaks ei muutu puit õues ka 100 aastaga!'
+  },
+  {
+    q: 'Kuidas kaua kulub vabaõhukuivamiseks 50 mm (2 tolli) okaspuu saematerjalil?',
+    opts: ['Umbes 6 kuud','1 aasta','3 aastat','5 aastat'],
+    correct: 2,
+    fb: 'Okaspuu rusikareegel: 1 toll aastas + 1 lisaaasta. Seega: 25mm (1") → 1 aasta, 50mm (2") → 3 aastat, 75mm (3") → 4 aastat, 100mm (4") → 5 aastat. Kõvad lehtpuud kuivavad ca 2× aeglasemalt.'
+  },
+  {
+    q: 'Millal on kasvava puu niiskussisaldus kõige madalam ja kõige kõrgem?',
+    opts: ['Madalaim juulis, kõrgeim jaanuaris','Madalaim septembris, kõrgeim novembrist veebruarini','Madalaim aprillis, kõrgeim augustis','Niiskus on aasta läbi konstantne'],
+    correct: 1,
+    fb: 'Kasvava puu niiskussisaldus on kõige madalam septembris (vegetatsiooni lõpp) ja kõige kõrgem novembrist veebruarini (talvine seisak). See mõjutab parima langetamisaja valikut – september on parim, sest puit on kergem ja sisaldab vähem vett.'
+  },
+  {
+    q: 'Miks tekivad otslõhed puidu kuivamisel ja kuidas neid vältida?',
+    opts: ['Liiga aeglasest kuivamisest; välditav kiirendamise teel','Otspind kuivab kiiremini → välimised kihid kahanevad, sisemised hoiavad mahu → tõmbepinged → lõhed säsikiirte juurde; välditav otspindade katmisega parafiinvahaga','Otslõhed on vältimatud','Tekivad ainult liiga niiskes õhus hoidmisel'],
+    correct: 1,
+    fb: 'Otslõhed tekivad, sest puidu otspind kuivab kõige kiiremini. Välimised kihid hakkavad kahanema, kuid sisemised kihid hoiavad algset mahu → tekivad tõmbepinged risti kiudu → lõhed (enamasti säsikiirte juurde). Vältimine: katke otspinnad parafiinvahaga.'
+  },
+  {
+    q: 'Mis on tasakaaluniiskus ja millest see sõltub?',
+    opts: ['Maksimaalne niiskus, mida puit suudab hoida','Stabiilne niiskustase, mille puit saavutab pikaaegsel viibimisel stabiilse suhtelise niiskusega keskkonnas; sõltub ristlõikest, niiskusest, pinnakatetest ja keskkonnast','Niiskus, mille juures puit on tugevaim','Keskmise kasvava puu niiskussisaldus'],
+    correct: 1,
+    fb: 'Tasakaaluniiskus on stabiilne niiskustase, mille puit saavutab piisavalt pika aja jooksul stabiilses keskkonnas. Sõltub: materjali ristlõikest, algsest niiskusest, pinnakatetest (õli, värv aeglustavad) ja keskkonna suhtelisest niiskusest + temperatuurist.'
+  },
+  {
+    q: 'Kuidas erineb lülipuidu ja maltspuidu niiskussisaldus männil?',
+    opts: ['Lülipuidu niiskus on alati suurem','Männi lülipuidu niiskus ~32–38% on oluliselt madalam kui maltspuidu niiskus ~145%','Lülipuidu ja maltspuidu niiskus on männil alati võrdne','Maltspuidu niiskus on alati alla 50%'],
+    correct: 1,
+    fb: 'Männi lülipuidu niiskus on 32–38%, kuid maltspuidu niiskus on 145%! Kuuse lülipuidu niiskus on 34–40% ja maltspuidu niiskus 113–153%. Lülipuidus on rakuõõnsused suletud (tüloosid, sulgunud poorid), mistõttu see sisaldab oluliselt vähem vett.'
+  },
+  {
+    q: 'Milline on Eesti metsade jaotus puuliikide kaupa (suurimad kolm)?',
+    opts: ['Kuusk 40%, mänd 30%, kask 20%','Mänd 44%, kask 27%, kuusk 19%','Kask 50%, mänd 30%, kuusk 15%','Mänd 35%, kuusk 35%, kask 20%'],
+    correct: 1,
+    fb: 'Eesti metsades domineerib mänd 44%-ga, järgneb kask 27% ja kuusk 19%. Haab moodustab 5%, sanglepp 3% ja teised 2%. Eesti pinnast on üle 50% metsaga kaetud – metsandus on meie jaoks väga oluline.'
+  },
+  {
+    q: 'Mis tüüpi puiduliigid on mänd, kuusk ja kask?',
+    opts: ['Kõik kolm on lülipuidulised','Mänd on lülipuiduline, kuusk on küpspuiduline, kask on maltspuiduline','Kõik kolm on küpspuidulised','Mänd on maltspuiduline, kuusk lülipuiduline, kask küpspuiduline'],
+    correct: 1,
+    fb: 'Mänd = lülipuiduline (tumedam lülipuit eristub hästi). Kuusk = küpspuiduline (südamikupuit ei erista värvuselt). Kask = maltspuiduline (lülipuitu pole üldse). Need kolm on Eesti peamised puuliigid ja nende eristamine on oluline!'
+  },
+  {
+    q: 'Miks kasutatakse lehist sildades ja liiprites, mitte mändi?',
+    opts: ['Lehis on odavam kui mänd','Lehis on märksa kõvem, tugevam ja mädanikukindlam kui mänd ning säilib hästi vees','Lehist on lihtsam töödelda','Lehis kasvab kiiremini ja on laialdasemalt kättesaadav'],
+    correct: 1,
+    fb: 'Lehis on märksa raskem ja kõvem kui mänd, paistab silma suure tugevuse ja mädanemiskindluse poolest – säilib hästi ka vees. Seetõttu sobib hästi liipriteks, sildade ja tugipostide tarbeks. Puudus: raske töödeldav ja suur kuivamiskahanemine.'
+  },
+  {
+    q: 'Mis on "must tamm" ja kuidas see tekib?',
+    opts: ['Tamm, mida on värvitud mustaks peitsi abil','Tamm, mis on vees pikemat aega leotunud – muutub peaaegu mustaks ja ülikõvaks','Tamm, mis on kasvanud väga varjulises kohas','Männi ja tamme hübriid'],
+    correct: 1,
+    fb: 'Must tamm tekib loodusliku protsessi käigus: kui harilik tamm leob vees pikemat aega, muutub ta peaaegu mustaks, ilus muster tuleb paremini nähtavale ja puit muutub ülikõvaks. Sellist peaaegu kahjustamatut puitu nimetatakse mustaks tammeks – see on väga hinnatud materjal.'
+  },
+  {
+    q: 'Milline on tiikpuu eripärane eelis kõigi Euroopa puuliikide ees?',
+    opts: ['Tiikpuu on kõige kergem','Tiikpuu on odavaim puitmaterjal','Tiikpuus leiduv räni annab ülima kulumiskindluse, mis ületab kõik Euroopa puuliigid','Tiikpuu on kõige kõvem puiduliik üldse'],
+    correct: 2,
+    fb: 'Tiikpuus leiduv räni annab puule ülima kulumiskindluse – ületab kõik Euroopa puuliigid! Lisaks sisaldab tiikpuu õlisid, mis on konserveeriva toimega. Väga hea vastupidavus mädanikele, putukatele, tulele ja hapetele. Seetõttu kasutatakse laialdaselt välistingimustes.'
+  },
+  {
+    q: 'Miks sobib saar painutamiseks ja mis on selle eriomadus?',
+    opts: ['Saar on kõige kergem lehtpuu','Saart saab kergesti koolutada; puidul on omapärane lõhn (eeterlikud õlid) ning iseloomulik muster','Saar on mädanikukindlaim lehtpuu','Saare puit on kõige odavam lehtpuit'],
+    correct: 1,
+    fb: 'Saare üks eriomadus on, et saad seda kergesti koolutada/painutada – seetõttu kasutatakse suuskade ja mööbli tootmisel. Omapärane lõhn tuleneb eeterlikest õlidest. Miinus: kolletub aja jooksul, eraldab pilpaid, kevad- ja sügispuit erineva kõvadusega.'
+  },
+  {
+    q: 'Milline on ebenipuu tihedus ja mida see tähendab igapäevas?',
+    opts: ['~500 kg/m³ – sama mis tamm','940–1320 kg/m³ – üks raskemaid puid maailmas, upub vees','~300 kg/m³ – kergem kui vesi','650 kg/m³ – sama mis kask'],
+    correct: 1,
+    fb: 'Ebenipuu tihedus on 940–1320 kg/m³. Kuna vee tihedus on 1000 kg/m³, siis osa ebenipuu liike UPUVAD vees! See on üks raskemaid puiduliike maailmas. Must lülipuit, äärmiselt kulumiskindel. Kasutatakse pillideks (klarnet, flööt), eheteks ja vineeri tootmiseks.'
+  },
+  {
+    q: 'Miks on haab sobiv tikutööstusesse ja puulusikate tegemiseks?',
+    opts: ['Haab on kõige tugevam lehtpuu','Haab on kerge, pehme ja hästi lõhestatav; ei sisalda vaiku ega anna maitset','Haab on kõige odavam puit Eestis','Haab on parim puit, sest kasvab väga kiiresti'],
+    correct: 1,
+    fb: 'Haab on kerge, pehme ja hästi lõhestatav – sobib tikutööstusele. Puulusikate jaoks on eelis, et haab ei sisalda vaiku ega anna maitset. Puudus: väga vastuvõtlik seenhaigustele – enamik Eesti suurtest haabadest on mädaniku poolt kahjustatud.'
+  },
+  {
+    q: 'Mis juhtub sanglepaga pärast langetamist?',
+    opts: ['Sanglepa puit muutub kohe mustaks','Puit on enne langetamist säravvalge, kuid õhu käes muutub järjestikku kollakaks, siis oranžimaks, lõpuks roosasid ja lillasid toone saades','Sanglepp ei muuda oma värvust','Sanglepp muutub kuivades peaaegu mustaks nagu ebenipuu'],
+    correct: 1,
+    fb: 'Sanglepa eripärane omadus: enne langetamist on puit säravvalge, kuid õhu käes muutub järjestikku: valge → kollane → oranž → tumeoranž → roosad ja lillad toonid. See näitab, et puus on peidus mitmeid huvitavaid värvaineid. Vees vastupidav, kuivanult roosakas.'
+  },
+  {
+    q: 'Mitu aastat võtab vabaõhukuivamine 100 mm (4 tolli) okaspuu materjali puhul?',
+    opts: ['1–2 aastat','3 aastat','5 aastat','10 aastat'],
+    correct: 2,
+    fb: 'Okaspuu rusikareegel: 1 toll aastas + 1 lisaaasta. Seega 100mm (4 tolli) materjal kuivab ~5 aastat. Eesti kliimas on vabaõhukuivamise tulemus ca 20% niiskus – sellest ei piisa tisleritöödeks (vajatakse 10–15%).'
+  },
+  {
+    q: 'Mis on kuivamiskiiruse suhe eri suundades?',
+    opts: ['Tangentsiaalne : radiaalne : pikikiudu = 2 : 1 : 0,1','Tangentsiaalne : radiaalne : pikikiudu = 1 : 2 : 25','Kõikides suundades kuivab puit ühtlaselt','Pikikiudu on kuivamine kõige aeglasem'],
+    correct: 1,
+    fb: 'Kuivamiskiiruse suhe: Tangentsiaalne : Radiaalne : Pikisuund = 1 : 2 : 25! See tähendab, et pikisuunas kuivab puit 25× kiiremini kui tangentsiaalselt ja 12,5× kiiremini kui radiaalselt. Seepärast tekivad otslõhed esimesena.'
+  },
+];
+
+let scores = { correct: 0, wrong: 0 };
+let answered = new Array(questions.length).fill(false);
+
+function buildQuiz() {
+  const container = document.getElementById('quiz-questions');
+  container.innerHTML = questions.map((q, qi) => `
+    <div class="question-card" id="qc-${qi}">
+      <div class="q-number">Küsimus ${qi+1} / ${questions.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="options">
+        ${q.opts.map((opt, oi) => `
+          <button class="option" id="opt-${qi}-${oi}" onclick="answerQ(${qi}, ${oi})">
+            <span class="opt-marker">${String.fromCharCode(65+oi)}</span>
+            ${opt}
+          </button>
+        `).join('')}
+      </div>
+      <div class="feedback-msg" id="fb-${qi}"></div>
+    </div>
+  `).join('');
+}
+
+function answerQ(qi, oi) {
+  if (answered[qi]) return;
+  answered[qi] = true;
+  const q = questions[qi];
+  const isCorrect = oi === q.correct;
+
+  q.opts.forEach((_, i) => {
+    const btn = document.getElementById(`opt-${qi}-${i}`);
+    btn.disabled = true;
+    if (i === q.correct) btn.classList.add('show-correct');
+  });
+  const chosen = document.getElementById(`opt-${qi}-${oi}`);
+  chosen.classList.remove('show-correct');
+  chosen.classList.add(isCorrect ? 'selected-correct' : 'selected-wrong');
+
+  const fb = document.getElementById(`fb-${qi}`);
+  fb.textContent = (isCorrect ? '✅ Õige! ' : '❌ Vale. ') + q.fb;
+  fb.className = 'feedback-msg ' + (isCorrect ? 'correct' : 'wrong');
+
+  const card = document.getElementById(`qc-${qi}`);
+  card.classList.add(isCorrect ? 'correct' : 'wrong');
+
+  if (isCorrect) scores.correct++; else scores.wrong++;
+  updateScoreboard();
+
+  const done = answered.filter(Boolean).length;
+  if (done === questions.length) showResult();
+}
+
+function updateScoreboard() {
+  document.getElementById('q-score').textContent = scores.correct;
+  document.getElementById('q-wrong').textContent = scores.wrong;
+  const done = answered.filter(Boolean).length;
+  document.getElementById('q-left').textContent = questions.length - done;
+  document.getElementById('q-progress').style.width = (done / questions.length * 100) + '%';
+}
+
+function showResult() {
+  document.getElementById('quiz-result').classList.add('show');
+  const pct = Math.round(scores.correct / questions.length * 100);
+  document.getElementById('result-score').textContent = `${scores.correct}/${questions.length}`;
+  const msgs = [
+    [90, '🌟 Suurepärane! Oled puiduõpetuse ekspert!'],
+    [70, '👍 Väga hästi! Mõni asi vajab veel kordamist.'],
+    [50, '📚 Hea algus! Vaata üle materjalid ja proovi uuesti.'],
+    [0,  '💡 Tutvu materjalidega põhjalikumalt ja proovi uuesti!']
+  ];
+  document.getElementById('result-msg').textContent = msgs.find(([t]) => pct >= t)[1];
+}
+
+function resetQuiz() {
+  scores = { correct: 0, wrong: 0 };
+  answered = new Array(questions.length).fill(false);
+  document.getElementById('quiz-result').classList.remove('show');
+  document.getElementById('q-left').textContent = questions.length;
+  updateScoreboard();
+  buildQuiz();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+buildQuiz();
+</script>
+</body>
+</html>
